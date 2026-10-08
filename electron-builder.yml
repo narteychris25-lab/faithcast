@@ -1,0 +1,47 @@
+# macOS packaging. To rename the app, change appId/productName here,
+# name/productName in package.json and src/shared/brand.ts.
+appId: com.worshipflow.app
+productName: WorshipFlow
+copyright: Copyright © 2026 WorshipFlow
+directories:
+  output: release
+  buildResources: build
+files:
+  - out/**
+  - package.json
+  - "!**/*.map"
+extraResources:
+  - from: resources
+    to: resources
+    filter: ["**/*"]
+asarUnpack:
+  - node_modules/better-sqlite3/**
+# better-sqlite3 ships Node-API prebuilds; no native rebuild needed.
+npmRebuild: false
+electronVersion: 44.4.5
+mac:
+  category: public.app-category.productivity
+  target:
+    - target: dmg
+      arch: [x64, arm64]
+    - target: dir
+      arch: [x64, arm64]
+  # Ad-hoc signature ("-"): lets macOS launch the app on this Mac by double-click. Replace with a Developer ID to distribute.
+  identity: "-"
+  hardenedRuntime: false
+  extendInfo:
+    NSHighResolutionCapable: true
+    LSMinimumSystemVersion: "11.0"
+dmg:
+  title: WorshipFlow
+  artifactName: WorshipFlow-${version}-${arch}.dmg
+fileAssociations:
+  - ext: churchservice
+    name: WorshipFlow Service
+    role: Editor
+  - ext: song
+    name: WorshipFlow Song
+    role: Editor
+  - ext: theme
+    name: WorshipFlow Theme
+    role: Editor

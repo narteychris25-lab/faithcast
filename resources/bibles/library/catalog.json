@@ -1,0 +1,158 @@
+[
+ {
+  "code": "kjv",
+  "abbreviation": "KJV",
+  "name": "King James Version (1769)",
+  "language": "English",
+  "license": "Public domain (outside the UK; Crown copyright applies in the United Kingdom)",
+  "status": "public-domain",
+  "file": "KJV.wfbible.json.gz",
+  "verses": 31102,
+  "books": 66,
+  "core": true
+ },
+ {
+  "code": "bsb",
+  "abbreviation": "BSB",
+  "name": "Berean Standard Bible",
+  "language": "English",
+  "license": "Public domain (dedicated April 2023)",
+  "status": "public-domain",
+  "file": "BSB.wfbible.json.gz",
+  "verses": 31086,
+  "books": 66,
+  "core": true
+ },
+ {
+  "code": "en_bbe",
+  "abbreviation": "BBE",
+  "name": "Basic English",
+  "language": "English",
+  "license": "Public domain",
+  "status": "public-domain",
+  "file": "BBE.wfbible.json.gz",
+  "verses": 31088,
+  "books": 66
+ },
+ {
+  "code": "en_asv",
+  "abbreviation": "ASV",
+  "name": "American Standard Version 1901",
+  "language": "English",
+  "license": "Public domain",
+  "status": "public-domain",
+  "file": "ASV.wfbible.json.gz",
+  "verses": 31086,
+  "books": 66
+ },
+ {
+  "code": "en_darby",
+  "abbreviation": "DARBY",
+  "name": "Darby's Translation 1890",
+  "language": "English",
+  "license": "Public domain",
+  "status": "public-domain",
+  "file": "DARBY.wfbible.json.gz",
+  "verses": 31099,
+  "books": 66
+ },
+ {
+  "code": "en_dra",
+  "abbreviation": "DRA",
+  "name": "Douay-Rheims American 1899",
+  "language": "English",
+  "license": "Public domain",
+  "status": "public-domain",
+  "file": "DRA.wfbible.json.gz",
+  "verses": 31233,
+  "books": 66
+ },
+ {
+  "code": "en_fbv",
+  "abbreviation": "FBV",
+  "name": "Free Bible Version",
+  "language": "English",
+  "license": "CC BY-SA 4.0 — Free Bible Version, Jonathan Gallagher",
+  "status": "open",
+  "file": "FBV.wfbible.json.gz",
+  "verses": 31087,
+  "books": 66
+ },
+ {
+  "code": "en_gnv",
+  "abbreviation": "GNV",
+  "name": "Geneva Bible",
+  "language": "English",
+  "license": "Public domain",
+  "status": "public-domain",
+  "file": "GNV.wfbible.json.gz",
+  "verses": 31090,
+  "books": 66
+ },
+ {
+  "code": "en_lsv",
+  "abbreviation": "LSV",
+  "name": "Literal Standard Version",
+  "language": "English",
+  "license": "CC BY-SA 4.0 — Literal Standard Version, Covenant Press",
+  "status": "open",
+  "file": "LSV.wfbible.json.gz",
+  "verses": 31104,
+  "books": 66
+ },
+ {
+  "code": "en_mbsb",
+  "abbreviation": "MSB",
+  "name": "Majority Standard Bible",
+  "language": "English",
+  "license": "Public domain (dedicated April 2023)",
+  "status": "public-domain",
+  "file": "MSB.wfbible.json.gz",
+  "verses": 31086,
+  "books": 66
+ },
+ {
+  "code": "en_engrv",
+  "abbreviation": "RV1885",
+  "name": "Revised Version 1885",
+  "language": "English",
+  "license": "Public domain",
+  "status": "public-domain",
+  "file": "RV1885.wfbible.json.gz",
+  "verses": 31087,
+  "books": 66
+ },
+ {
+  "code": "en_web",
+  "abbreviation": "WEB",
+  "name": "World English Bible (American Edition)",
+  "language": "English",
+  "license": "Public domain (World English Bible)",
+  "status": "public-domain",
+  "file": "WEB.wfbible.json.gz",
+  "verses": 31098,
+  "books": 66
+ },
+ {
+  "code": "en_webbe",
+  "abbreviation": "WEBBE",
+  "name": "World English Bible (British Edition)",
+  "language": "English",
+  "license": "Public domain (World English Bible)",
+  "status": "public-domain",
+  "file": "WEBBE.wfbible.json.gz",
+  "verses": 31098,
+  "books": 66
+ },
+ {
+  "code": "en_ylt98",
+  "abbreviation": "YLT",
+  "name": "Young's Literal Translation 1898",
+  "language": "English",
+  "license": "Public domain",
+  "status": "public-domain",
+  "file": "YLT.wfbible.json.gz",
+  "verses": 31102,
+  "books": 66
+ }
+]

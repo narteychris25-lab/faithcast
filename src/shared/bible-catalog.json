@@ -1,0 +1,902 @@
+[
+ {
+  "code": "ar_kehm",
+  "abbreviation": "KEHM",
+  "name": "Ketab El Hayat Majani",
+  "language": "Arabic",
+  "langCode": "ar",
+  "status": "copyrighted",
+  "license": "Copyrighted — all rights reserved by the publisher",
+  "bundled": false
+ },
+ {
+  "code": "zh_cunpss-shen",
+  "abbreviation": "CUNPSS-SHEN",
+  "name": "Chinese Union Version (New Punctuation, Shen Edition)",
+  "language": "Chinese",
+  "langCode": "zh",
+  "status": "copyrighted",
+  "license": "Copyrighted — all rights reserved by the publisher",
+  "bundled": false
+ },
+ {
+  "code": "zh_cnvs",
+  "abbreviation": "CNVS",
+  "name": "New Chinese Version",
+  "language": "Chinese",
+  "langCode": "zh",
+  "status": "copyrighted",
+  "license": "Copyrighted — all rights reserved by the publisher",
+  "bundled": false
+ },
+ {
+  "code": "de_sch1951",
+  "abbreviation": "SCH1951",
+  "name": "Schlachter 1951",
+  "language": "German",
+  "langCode": "de",
+  "status": "unverified",
+  "license": "Copyright status not verified",
+  "bundled": false
+ },
+ {
+  "code": "el_fpb",
+  "abbreviation": "FPB",
+  "name": "Modern Greek (Demotic)",
+  "language": "Greek",
+  "langCode": "el",
+  "status": "unverified",
+  "license": "Copyright status not verified",
+  "bundled": false
+ },
+ {
+  "code": "en_bbe",
+  "abbreviation": "BBE",
+  "name": "Basic English",
+  "language": "English",
+  "langCode": "en",
+  "status": "public-domain",
+  "license": "Public domain",
+  "bundled": true
+ },
+ {
+  "code": "en_kjv",
+  "abbreviation": "KJV",
+  "name": "King James Version",
+  "language": "English",
+  "langCode": "en",
+  "status": "public-domain",
+  "license": "Public domain",
+  "bundled": false
+ },
+ {
+  "code": "en_asv",
+  "abbreviation": "ASV",
+  "name": "American Standard Version 1901",
+  "language": "English",
+  "langCode": "en",
+  "status": "public-domain",
+  "license": "Public domain",
+  "bundled": true
+ },
+ {
+  "code": "en_amp",
+  "abbreviation": "AMP",
+  "name": "Amplified Bible",
+  "language": "English",
+  "langCode": "en",
+  "status": "copyrighted",
+  "license": "Copyrighted — all rights reserved by the publisher",
+  "bundled": false
+ },
+ {
+  "code": "en_wbms",
+  "abbreviation": "WBMS",
+  "name": "Wycliffe's Bible with Modern Spelling",
+  "language": "English",
+  "langCode": "en",
+  "status": "unverified",
+  "license": "Copyright status not verified",
+  "bundled": false
+ },
+ {
+  "code": "en_jub",
+  "abbreviation": "JUB",
+  "name": "Jubilee Bible",
+  "language": "English",
+  "langCode": "en",
+  "status": "copyrighted",
+  "license": "Copyrighted — all rights reserved by the publisher",
+  "bundled": false
+ },
+ {
+  "code": "en_bsb",
+  "abbreviation": "BSB",
+  "name": "Berean Standard Bible",
+  "language": "English",
+  "langCode": "en",
+  "status": "public-domain",
+  "license": "Public domain",
+  "bundled": false
+ },
+ {
+  "code": "en_csb",
+  "abbreviation": "CSB",
+  "name": "Christian Standard Bible",
+  "language": "English",
+  "langCode": "en",
+  "status": "copyrighted",
+  "license": "Copyrighted — all rights reserved by the publisher",
+  "bundled": false
+ },
+ {
+  "code": "en_cev",
+  "abbreviation": "CEV",
+  "name": "Contemporary English Version",
+  "language": "English",
+  "langCode": "en",
+  "status": "copyrighted",
+  "license": "Copyrighted — all rights reserved by the publisher",
+  "bundled": false
+ },
+ {
+  "code": "en_darby",
+  "abbreviation": "DARBY",
+  "name": "Darby's Translation 1890",
+  "language": "English",
+  "langCode": "en",
+  "status": "public-domain",
+  "license": "Public domain",
+  "bundled": true
+ },
+ {
+  "code": "en_dra",
+  "abbreviation": "DRA",
+  "name": "Douay-Rheims American 1899",
+  "language": "English",
+  "langCode": "en",
+  "status": "public-domain",
+  "license": "Public domain",
+  "bundled": true
+ },
+ {
+  "code": "en_esv",
+  "abbreviation": "ESV",
+  "name": "English Standard Version",
+  "language": "English",
+  "langCode": "en",
+  "status": "copyrighted",
+  "license": "Copyrighted — all rights reserved by the publisher",
+  "bundled": false
+ },
+ {
+  "code": "en_fbv",
+  "abbreviation": "FBV",
+  "name": "Free Bible Version",
+  "language": "English",
+  "langCode": "en",
+  "status": "open",
+  "license": "CC BY-SA 4.0 — Free Bible Version, Jonathan Gallagher",
+  "bundled": true
+ },
+ {
+  "code": "en_gnv",
+  "abbreviation": "GNV",
+  "name": "Geneva Bible",
+  "language": "English",
+  "langCode": "en",
+  "status": "public-domain",
+  "license": "Public domain",
+  "bundled": true
+ },
+ {
+  "code": "en_gnt",
+  "abbreviation": "GNT",
+  "name": "Good News Translation",
+  "language": "English",
+  "langCode": "en",
+  "status": "copyrighted",
+  "license": "Copyrighted — all rights reserved by the publisher",
+  "bundled": false
+ },
+ {
+  "code": "en_kjva",
+  "abbreviation": "KJVA",
+  "name": "King James Version with Apocrypha",
+  "language": "English",
+  "langCode": "en",
+  "status": "public-domain",
+  "license": "Public domain",
+  "bundled": false
+ },
+ {
+  "code": "en_leb",
+  "abbreviation": "LEB",
+  "name": "Lexham English Bible",
+  "language": "English",
+  "langCode": "en",
+  "status": "copyrighted",
+  "license": "Copyrighted — all rights reserved by the publisher",
+  "bundled": false
+ },
+ {
+  "code": "en_lsv",
+  "abbreviation": "LSV",
+  "name": "Literal Standard Version",
+  "language": "English",
+  "langCode": "en",
+  "status": "open",
+  "license": "CC BY-SA 4.0 — Literal Standard Version, Covenant Press",
+  "bundled": true
+ },
+ {
+  "code": "en_mbsb",
+  "abbreviation": "MSB",
+  "name": "Majority Standard Bible",
+  "language": "English",
+  "langCode": "en",
+  "status": "public-domain",
+  "license": "Public domain (dedicated April 2023)",
+  "bundled": true
+ },
+ {
+  "code": "en_nasb",
+  "abbreviation": "NASB",
+  "name": "New American Standard Bible 2020",
+  "language": "English",
+  "langCode": "en",
+  "status": "copyrighted",
+  "license": "Copyrighted — all rights reserved by the publisher",
+  "bundled": false
+ },
+ {
+  "code": "en_niv",
+  "abbreviation": "NIV",
+  "name": "New International Version",
+  "language": "English",
+  "langCode": "en",
+  "status": "copyrighted",
+  "license": "Copyrighted — all rights reserved by the publisher",
+  "bundled": false
+ },
+ {
+  "code": "en_nlt",
+  "abbreviation": "NLT",
+  "name": "New Living Translation",
+  "language": "English",
+  "langCode": "en",
+  "status": "copyrighted",
+  "license": "Copyrighted — all rights reserved by the publisher",
+  "bundled": false
+ },
+ {
+  "code": "en_nmv",
+  "abbreviation": "NMV",
+  "name": "New Messianic Version Bible",
+  "language": "English",
+  "langCode": "en",
+  "status": "copyrighted",
+  "license": "Copyrighted — all rights reserved by the publisher",
+  "bundled": false
+ },
+ {
+  "code": "en_nkjv",
+  "abbreviation": "NKJV",
+  "name": "New King James Version",
+  "language": "English",
+  "langCode": "en",
+  "status": "copyrighted",
+  "license": "Copyrighted — all rights reserved by the publisher",
+  "bundled": false
+ },
+ {
+  "code": "en_kjvcpb",
+  "abbreviation": "KJVCPB",
+  "name": "The Cambridge Paragraph Bible of the Authorized English Version",
+  "language": "English",
+  "langCode": "en",
+  "status": "public-domain",
+  "license": "Public domain",
+  "bundled": false
+ },
+ {
+  "code": "en_t4t",
+  "abbreviation": "T4T",
+  "name": "A Translation for Translators",
+  "language": "English",
+  "langCode": "en",
+  "status": "open",
+  "license": "CC BY-SA 4.0 — A Translation for Translators, Ellis Deibler",
+  "bundled": false
+ },
+ {
+  "code": "en_engrv",
+  "abbreviation": "RV1885",
+  "name": "Revised Version 1885",
+  "language": "English",
+  "langCode": "en",
+  "status": "public-domain",
+  "license": "Public domain",
+  "bundled": true
+ },
+ {
+  "code": "en_web",
+  "abbreviation": "WEB",
+  "name": "World English Bible (American Edition)",
+  "language": "English",
+  "langCode": "en",
+  "status": "public-domain",
+  "license": "Public domain (World English Bible)",
+  "bundled": true
+ },
+ {
+  "code": "en_webu",
+  "abbreviation": "WEBU",
+  "name": "World English Bible Updated",
+  "language": "English",
+  "langCode": "en",
+  "status": "public-domain",
+  "license": "Public domain",
+  "bundled": false
+ },
+ {
+  "code": "en_webbe",
+  "abbreviation": "WEBBE",
+  "name": "World English Bible (British Edition)",
+  "language": "English",
+  "langCode": "en",
+  "status": "public-domain",
+  "license": "Public domain (World English Bible)",
+  "bundled": true
+ },
+ {
+  "code": "en_webus",
+  "abbreviation": "WEBUS",
+  "name": "World English Bible, American English Edition, without Strong's numbers",
+  "language": "English",
+  "langCode": "en",
+  "status": "public-domain",
+  "license": "Public domain",
+  "bundled": false
+ },
+ {
+  "code": "en_wmb",
+  "abbreviation": "WMB",
+  "name": "World Messianic Bible (American English)",
+  "language": "English",
+  "langCode": "en",
+  "status": "public-domain",
+  "license": "Public domain",
+  "bundled": false
+ },
+ {
+  "code": "en_wmbbe",
+  "abbreviation": "WMBBE",
+  "name": "World Messianic Bible (British Edition)",
+  "language": "English",
+  "langCode": "en",
+  "status": "public-domain",
+  "license": "Public domain",
+  "bundled": false
+ },
+ {
+  "code": "en_ylt98",
+  "abbreviation": "YLT",
+  "name": "Young's Literal Translation 1898",
+  "language": "English",
+  "langCode": "en",
+  "status": "public-domain",
+  "license": "Public domain",
+  "bundled": true
+ },
+ {
+  "code": "en_tojb2011",
+  "abbreviation": "TOJB2011",
+  "name": "The Orthodox Jewish Bible",
+  "language": "English",
+  "langCode": "en",
+  "status": "copyrighted",
+  "license": "Copyrighted — all rights reserved by the publisher",
+  "bundled": false
+ },
+ {
+  "code": "eo_esp",
+  "abbreviation": "ESP1926",
+  "name": "Esperanto (La Sankta Biblio 1926)",
+  "language": "Esperanto",
+  "langCode": "eo",
+  "status": "public-domain",
+  "license": "Public domain",
+  "bundled": true
+ },
+ {
+  "code": "es_rvr1960",
+  "abbreviation": "RVR1960",
+  "name": "Reina Valera 1960",
+  "language": "Spanish",
+  "langCode": "es",
+  "status": "copyrighted",
+  "license": "Copyrighted — all rights reserved by the publisher",
+  "bundled": false
+ },
+ {
+  "code": "fi_fb38",
+  "abbreviation": "FB38",
+  "name": "Kirkkoraamattu 1933/38",
+  "language": "Finnish",
+  "langCode": "fi",
+  "status": "copyrighted",
+  "license": "Copyrighted — all rights reserved by the publisher",
+  "bundled": false
+ },
+ {
+  "code": "fr_apee",
+  "abbreviation": "APEE",
+  "name": "Le Bible de I'Épée",
+  "language": "French",
+  "langCode": "fr",
+  "status": "copyrighted",
+  "license": "Copyrighted — all rights reserved by the publisher",
+  "bundled": false
+ },
+ {
+  "code": "ko_krv",
+  "abbreviation": "KRV",
+  "name": "Korean Revised",
+  "language": "Korean",
+  "langCode": "ko",
+  "status": "copyrighted",
+  "license": "Copyrighted — all rights reserved by the publisher",
+  "bundled": false
+ },
+ {
+  "code": "pt_aa",
+  "abbreviation": "AA",
+  "name": "Almeida Revisada Imprensa Bíblica",
+  "language": "Portuguese",
+  "langCode": "pt",
+  "status": "copyrighted",
+  "license": "Copyrighted — all rights reserved by the publisher",
+  "bundled": false
+ },
+ {
+  "code": "pt_acf",
+  "abbreviation": "ACF",
+  "name": "Almeida Corrigida e Revisada Fiel",
+  "language": "Portuguese",
+  "langCode": "pt",
+  "status": "copyrighted",
+  "license": "Copyrighted — all rights reserved by the publisher",
+  "bundled": false
+ },
+ {
+  "code": "pt_ara",
+  "abbreviation": "ARA",
+  "name": "Almeida Revista e Atualizada",
+  "language": "Portuguese",
+  "langCode": "pt",
+  "status": "copyrighted",
+  "license": "Copyrighted — all rights reserved by the publisher",
+  "bundled": false
+ },
+ {
+  "code": "pt_nvi",
+  "abbreviation": "NVI",
+  "name": "Nova Versão Internacional",
+  "language": "Portuguese",
+  "langCode": "pt",
+  "status": "copyrighted",
+  "license": "Copyrighted — all rights reserved by the publisher",
+  "bundled": false
+ },
+ {
+  "code": "pt_arc",
+  "abbreviation": "ARC",
+  "name": "Almeida Revista e Corrigida",
+  "language": "Portuguese",
+  "langCode": "pt",
+  "status": "copyrighted",
+  "license": "Copyrighted — all rights reserved by the publisher",
+  "bundled": false
+ },
+ {
+  "code": "pt_rc69",
+  "abbreviation": "RC69",
+  "name": "Almeida Revista e Corrigida 1969",
+  "language": "Portuguese",
+  "langCode": "pt",
+  "status": "copyrighted",
+  "license": "Copyrighted — all rights reserved by the publisher",
+  "bundled": false
+ },
+ {
+  "code": "pt_a21",
+  "abbreviation": "A21",
+  "name": "Almeida Século 21",
+  "language": "Portuguese",
+  "langCode": "pt",
+  "status": "copyrighted",
+  "license": "Copyrighted — all rights reserved by the publisher",
+  "bundled": false
+ },
+ {
+  "code": "pt_bpt09",
+  "abbreviation": "BPT09",
+  "name": "Bíblia para Todos",
+  "language": "Portuguese",
+  "langCode": "pt",
+  "status": "copyrighted",
+  "license": "Copyrighted — all rights reserved by the publisher",
+  "bundled": false
+ },
+ {
+  "code": "pt_avm",
+  "abbreviation": "AVM",
+  "name": "Bíblia Sagrada Ave-Maria",
+  "language": "Portuguese",
+  "langCode": "pt",
+  "status": "copyrighted",
+  "license": "Copyrighted — all rights reserved by the publisher",
+  "bundled": false
+ },
+ {
+  "code": "pt_vfl",
+  "abbreviation": "VFL",
+  "name": "Bíblia Sagrada: Versão Fácil de Ler",
+  "language": "Portuguese",
+  "langCode": "pt",
+  "status": "copyrighted",
+  "license": "Copyrighted — all rights reserved by the publisher",
+  "bundled": false
+ },
+ {
+  "code": "pt_pastoral",
+  "abbreviation": "PASTORAL",
+  "name": "Edição Pastoral",
+  "language": "Portuguese",
+  "langCode": "pt",
+  "status": "copyrighted",
+  "license": "Copyrighted — all rights reserved by the publisher",
+  "bundled": false
+ },
+ {
+  "code": "pt_kja",
+  "abbreviation": "KJA",
+  "name": "King James Atualizada",
+  "language": "Portuguese",
+  "langCode": "pt",
+  "status": "copyrighted",
+  "license": "Copyrighted — all rights reserved by the publisher",
+  "bundled": false
+ },
+ {
+  "code": "pt_bkj",
+  "abbreviation": "BKJ",
+  "name": "King James Fiel",
+  "language": "Portuguese",
+  "langCode": "pt",
+  "status": "copyrighted",
+  "license": "Copyrighted — all rights reserved by the publisher",
+  "bundled": false
+ },
+ {
+  "code": "pt_naa",
+  "abbreviation": "NAA",
+  "name": "Nova Almeida Atualizada",
+  "language": "Portuguese",
+  "langCode": "pt",
+  "status": "copyrighted",
+  "license": "Copyrighted — all rights reserved by the publisher",
+  "bundled": false
+ },
+ {
+  "code": "pt_nbv",
+  "abbreviation": "NBV",
+  "name": "Nova Bíblia Viva 2007",
+  "language": "Portuguese",
+  "langCode": "pt",
+  "status": "copyrighted",
+  "license": "Copyrighted — all rights reserved by the publisher",
+  "bundled": false
+ },
+ {
+  "code": "pt_ntlh",
+  "abbreviation": "NTLH",
+  "name": "Nova Tradução na Linguagem de Hoje",
+  "language": "Portuguese",
+  "langCode": "pt",
+  "status": "copyrighted",
+  "license": "Copyrighted — all rights reserved by the publisher",
+  "bundled": false
+ },
+ {
+  "code": "pt_nvi2011",
+  "abbreviation": "NVI2011",
+  "name": "Nova Versão Internacional 2011",
+  "language": "Portuguese",
+  "langCode": "pt",
+  "status": "copyrighted",
+  "license": "Copyrighted — all rights reserved by the publisher",
+  "bundled": false
+ },
+ {
+  "code": "pt_nvt",
+  "abbreviation": "NVT",
+  "name": "Nova Versão Transformadora",
+  "language": "Portuguese",
+  "langCode": "pt",
+  "status": "copyrighted",
+  "license": "Copyrighted — all rights reserved by the publisher",
+  "bundled": false
+ },
+ {
+  "code": "pt_ol",
+  "abbreviation": "OL",
+  "name": "O Livro",
+  "language": "Portuguese",
+  "langCode": "pt",
+  "status": "copyrighted",
+  "license": "Copyrighted — all rights reserved by the publisher",
+  "bundled": false
+ },
+ {
+  "code": "pt_tb",
+  "abbreviation": "TB",
+  "name": "Tradução Brasileira",
+  "language": "Portuguese",
+  "langCode": "pt",
+  "status": "unverified",
+  "license": "Copyright status not verified",
+  "bundled": false
+ },
+ {
+  "code": "pt_matos",
+  "abbreviation": "MATOS",
+  "name": "Tradução do Pe. Matos Soares",
+  "language": "Portuguese",
+  "langCode": "pt",
+  "status": "copyrighted",
+  "license": "Copyrighted — all rights reserved by the publisher",
+  "bundled": false
+ },
+ {
+  "code": "ro_vdc",
+  "abbreviation": "VDC",
+  "name": "Versiunea Dumitru Cornilescu",
+  "language": "Romanian",
+  "langCode": "ro",
+  "status": "unverified",
+  "license": "Copyright status not verified",
+  "bundled": false
+ },
+ {
+  "code": "ru_synod",
+  "abbreviation": "SYNOD",
+  "name": "Синодальный перевод (incomplete: missing Esther and Daniel)",
+  "language": "Russian",
+  "langCode": "ru",
+  "status": "public-domain",
+  "license": "Public domain (Esther and Daniel are missing from this edition)",
+  "bundled": true
+ },
+ {
+  "code": "vi_vie",
+  "abbreviation": "VIE",
+  "name": "Tiếng Việt",
+  "language": "Vietnamese",
+  "langCode": "vi",
+  "status": "unverified",
+  "license": "Copyright status not verified",
+  "bundled": false
+ },
+ {
+  "code": "it_irb20",
+  "abbreviation": "IRB20",
+  "name": "Sacra Bibbia Versione Riveduta 2020",
+  "language": "Italian",
+  "langCode": "it",
+  "status": "copyrighted",
+  "license": "Copyrighted — all rights reserved by the publisher",
+  "bundled": false
+ },
+ {
+  "code": "pl_ubg",
+  "abbreviation": "UBG",
+  "name": "Uwspółcześniona Biblia Gdańska",
+  "language": "Polish",
+  "langCode": "pl",
+  "status": "copyrighted",
+  "license": "Copyrighted — all rights reserved by the publisher",
+  "bundled": false
+ },
+ {
+  "code": "tr_ytc",
+  "abbreviation": "YTC",
+  "name": "Yorumsuz Türkçe Çeviri",
+  "language": "Turkish",
+  "langCode": "tr",
+  "status": "copyrighted",
+  "license": "Copyrighted — all rights reserved by the publisher",
+  "bundled": false
+ },
+ {
+  "code": "sv_sfb15",
+  "abbreviation": "SFB15",
+  "name": "Svenska Folkbibeln 2015",
+  "language": "Swedish",
+  "langCode": "sv",
+  "status": "copyrighted",
+  "license": "Copyrighted — all rights reserved by the publisher",
+  "bundled": false
+ },
+ {
+  "code": "hu_hunk",
+  "abbreviation": "KAROLI",
+  "name": "Károli 1908",
+  "language": "Hungarian",
+  "langCode": "hu",
+  "status": "public-domain",
+  "license": "Public domain",
+  "bundled": true
+ },
+ {
+  "code": "cs_bkr",
+  "abbreviation": "BKR",
+  "name": "Bible Kralická 1613",
+  "language": "Czech",
+  "langCode": "cs",
+  "status": "public-domain",
+  "license": "Public domain",
+  "bundled": true
+ },
+ {
+  "code": "hi_irvhin",
+  "abbreviation": "IRV-HI",
+  "name": "Indian Revised Version (IRV) Hindi 2019",
+  "language": "Hindi",
+  "langCode": "hi",
+  "status": "open",
+  "license": "CC BY-SA 4.0 — Indian Revised Version, Bridge Connectivity Solutions",
+  "bundled": true
+ },
+ {
+  "code": "ur_irvurd",
+  "abbreviation": "IRV-UR",
+  "name": "Indian Revised Version (IRV) Urdu 2019",
+  "language": "Urdu",
+  "langCode": "ur",
+  "status": "open",
+  "license": "CC BY-SA 4.0 — Indian Revised Version, Bridge Connectivity Solutions",
+  "bundled": true
+ },
+ {
+  "code": "fa_opcb",
+  "abbreviation": "OPCB",
+  "name": "Persian Contemporary Bible 2022",
+  "language": "Persian",
+  "langCode": "fa",
+  "status": "open",
+  "license": "CC BY-SA 4.0 — Open Persian Contemporary Bible, Biblica, Inc.",
+  "bundled": true
+ },
+ {
+  "code": "th_kjvthai",
+  "abbreviation": "KJVTHAI",
+  "name": "Thai KJV",
+  "language": "Thai",
+  "langCode": "th",
+  "status": "copyrighted",
+  "license": "Copyrighted — all rights reserved by the publisher",
+  "bundled": false
+ },
+ {
+  "code": "bn_irvben",
+  "abbreviation": "IRV-BN",
+  "name": "Indian Revised Version (IRV) Bengali",
+  "language": "Bengali",
+  "langCode": "bn",
+  "status": "open",
+  "license": "CC BY-SA 4.0 — Indian Revised Version, Bridge Connectivity Solutions",
+  "bundled": true
+ },
+ {
+  "code": "pa_irvpun",
+  "abbreviation": "IRV-PA",
+  "name": "Indian Revised Version (IRV) Punjabi",
+  "language": "Punjabi",
+  "langCode": "pa",
+  "status": "open",
+  "license": "CC BY-SA 4.0 — Indian Revised Version, Bridge Connectivity Solutions",
+  "bundled": true
+ },
+ {
+  "code": "ta_irvtam",
+  "abbreviation": "IRV-TA",
+  "name": "Indian Revised Version (IRV) Tamil",
+  "language": "Tamil",
+  "langCode": "ta",
+  "status": "open",
+  "license": "CC BY-SA 4.0 — Indian Revised Version, Bridge Connectivity Solutions",
+  "bundled": true
+ },
+ {
+  "code": "te_irvtel",
+  "abbreviation": "IRV-TE",
+  "name": "Indian Revised Version (IRV) Telugu 2019",
+  "language": "Telugu",
+  "langCode": "te",
+  "status": "open",
+  "license": "CC BY-SA 4.0 — Indian Revised Version, Bridge Connectivity Solutions",
+  "bundled": true
+ },
+ {
+  "code": "mr_irvmar",
+  "abbreviation": "IRV-MR",
+  "name": "Indian Revised Version (IRV) Marathi",
+  "language": "Marathi",
+  "langCode": "mr",
+  "status": "open",
+  "license": "CC BY-SA 4.0 — Indian Revised Version, Bridge Connectivity Solutions",
+  "bundled": true
+ },
+ {
+  "code": "sw_sruv",
+  "abbreviation": "SRUV",
+  "name": "Swahili Revised Union Version",
+  "language": "Swahili",
+  "langCode": "sw",
+  "status": "copyrighted",
+  "license": "Copyrighted — all rights reserved by the publisher",
+  "bundled": false
+ },
+ {
+  "code": "tl_abtag",
+  "abbreviation": "ABTAG",
+  "name": "Ang Biblia 1905",
+  "language": "Filipino",
+  "langCode": "tl",
+  "status": "public-domain",
+  "license": "Public domain",
+  "bundled": true
+ },
+ {
+  "code": "sr_dk",
+  "abbreviation": "DK",
+  "name": "Daničić-Karadžić",
+  "language": "Serbian",
+  "langCode": "sr",
+  "status": "public-domain",
+  "license": "Public domain",
+  "bundled": true
+ },
+ {
+  "code": "bg_vbg",
+  "abbreviation": "VBG",
+  "name": "Veren",
+  "language": "Bulgarian",
+  "langCode": "bg",
+  "status": "copyrighted",
+  "license": "Copyrighted — all rights reserved by the publisher",
+  "bundled": false
+ },
+ {
+  "code": "be_bbl",
+  "abbreviation": "BBL",
+  "name": "Bíblia (tradução de V. Semukha)",
+  "language": "Belarusian",
+  "langCode": "be",
+  "status": "copyrighted",
+  "license": "Copyrighted — all rights reserved by the publisher",
+  "bundled": false
+ },
+ {
+  "code": "nb_bibel2011",
+  "abbreviation": "BIBEL2011",
+  "name": "Bibel 2011",
+  "language": "Norwegian (Bokmål)",
+  "langCode": "nb",
+  "status": "copyrighted",
+  "license": "Copyrighted — all rights reserved by the publisher",
+  "bundled": false
+ }
+]

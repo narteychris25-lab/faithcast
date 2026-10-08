@@ -1,0 +1,7 @@
+{
+  // Editor-only umbrella config. Builds and `npm run typecheck` use
+  // tsconfig.node.json (main/preload) and tsconfig.web.json (renderer).
+  "extends": "./tsconfig.web.json",
+  "compilerOptions": { "types": ["node"], "noEmit": true },
+  "include": ["src/**/*", "tests/**/*", "*.config.ts"]
+}
