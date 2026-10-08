@@ -14,6 +14,8 @@ import { useService } from '@/stores/service'
 import { useLive } from '@/stores/live'
 import { EmptyState } from '@/components/ui/controls'
 import { confirmDialog, openContextMenu, promptDialog, toast, type MenuEntry } from '@/components/ui/overlays'
+import { IS_MAC, isMod, OS } from '@/lib/platform'
+import { comboLabel } from '@/lib/shortcuts'
 
 export interface ItemActions {
   edit: (item: ServiceItem) => void
@@ -52,13 +54,13 @@ function Row({ item, index, actions }: { item: ServiceItem; index: number; actio
       }
     },
     'separator',
-    { label: 'Move up', icon: ArrowUp, shortcut: '⌥↑', disabled: index === 0 || item.locked, onSelect: () => void svc.moveItem(item.id, -1) },
-    { label: 'Move down', icon: ArrowDown, shortcut: '⌥↓', disabled: item.locked, onSelect: () => void svc.moveItem(item.id, 1) },
-    { label: 'Duplicate', icon: Copy, shortcut: '⌘D', onSelect: () => void svc.duplicateItem(item.id) },
+    { label: 'Move up', icon: ArrowUp, shortcut: comboLabel('Alt+ArrowUp'), disabled: index === 0 || item.locked, onSelect: () => void svc.moveItem(item.id, -1) },
+    { label: 'Move down', icon: ArrowDown, shortcut: comboLabel('Alt+ArrowDown'), disabled: item.locked, onSelect: () => void svc.moveItem(item.id, 1) },
+    { label: 'Duplicate', icon: Copy, shortcut: comboLabel('Mod+KeyD'), onSelect: () => void svc.duplicateItem(item.id) },
     { label: item.hidden ? 'Show in presentation' : 'Hide from presentation', icon: item.hidden ? Eye : EyeOff, onSelect: () => svc.updateItem(item.id, { hidden: !item.hidden }) },
     { label: item.locked ? 'Unlock' : 'Lock', icon: item.locked ? Unlock : Lock, onSelect: () => svc.updateItem(item.id, { locked: !item.locked }) },
     'separator',
-    { label: 'Delete', icon: Trash2, danger: true, shortcut: '⌫', disabled: item.locked, onSelect: () => void deleteItem(item) }
+    { label: 'Delete', icon: Trash2, danger: true, shortcut: comboLabel(IS_MAC ? 'Backspace' : 'Delete'), disabled: item.locked, onSelect: () => void deleteItem(item) }
   ]
 
   if (item.type === 'header') {
@@ -145,7 +147,7 @@ export async function deleteItem(item: ServiceItem) {
   if (ok) await useService.getState().deleteItem(item.id)
 }
 
-/** Center column: the ordered, sortable service sequence. Accepts drops from the library and Finder. */
+/** Center column: the ordered, sortable service sequence. Accepts drops from the library and the file manager. */
 export function ServiceList({ actions }: { actions: ItemActions }) {
   const service = useService((s) => s.service)
   const svc = useService()
@@ -183,8 +185,8 @@ export function ServiceList({ actions }: { actions: ItemActions }) {
       }
       return
     }
-    // Files dragged in from Finder: import to the library, then add.
-    const paths = [...e.dataTransfer.files].map((f) => window.wf.pathForFile(f)).filter(Boolean)
+    // Files dragged in from Finder / File Explorer: import to the library, then add.
+    const paths = [...e.dataTransfer.files].map((f) => window.fc.pathForFile(f)).filter(Boolean)
     if (!paths.length) return
     const r = await api('media:import', { paths })
     if (r.errors.length) toast.warning(r.errors.slice(0, 3).join('\n'))
@@ -206,7 +208,7 @@ export function ServiceList({ actions }: { actions: ItemActions }) {
     } else if ((e.key === 'Backspace' || e.key === 'Delete') && cur) {
       e.preventDefault()
       void deleteItem(cur)
-    } else if (e.key === 'd' && e.metaKey && cur) {
+    } else if (e.key.toLowerCase() === 'd' && isMod(e) && cur) {
       e.preventDefault()
       void svc.duplicateItem(cur.id)
     } else if (e.key === 'Enter' && cur) {
@@ -244,7 +246,7 @@ export function ServiceList({ actions }: { actions: ItemActions }) {
           {items.length === 0 && (
             <div className="flex-1">
               <EmptyState icon={ListPlus} title="This service is empty">
-                Add songs, Bible passages, media and slides from the left panel — click to add, or drag them here. You can also drop files from Finder.
+                Add songs, Bible passages, media and slides from the left panel — click to add, or drag them here. You can also drop files from {OS.fileManager}.
               </EmptyState>
             </div>
           )}

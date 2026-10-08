@@ -5,19 +5,20 @@ import { DEFAULT_THEME_SETTINGS, deepMerge } from '@shared/defaults'
 import type { Repos } from '../db/repos'
 import { paths } from '../paths'
 import { parse, ThemeSettingsSchema, z } from '../validation'
+import { BRAND } from '@shared/brand'
 
 /**
  * .theme file format (JSON):
- * { "format": "worshipflow-theme", "version": 1, "name": "...", "settings": ThemeSettings,
+ * { "format": "faithcast-theme", "version": 1, "name": "...", "settings": ThemeSettings,
  *   "backgroundImage"?: { "name": "bg.jpg", "data": "<base64>" } }
  * Image backgrounds are embedded so themes are portable between computers.
  */
-const THEME_FORMAT = 'worshipflow-theme'
+const THEME_FORMAT = 'faithcast-theme'
 const MAX_FILE = 40 * 1024 * 1024
 const IMAGE_EXT = /\.(jpe?g|png|webp|gif)$/i
 
 const ThemeFile = z.object({
-  format: z.literal(THEME_FORMAT),
+  format: z.enum([THEME_FORMAT, `${BRAND.legacy.slug}-theme`]),
   version: z.literal(1),
   name: z.string().min(1).max(200),
   settings: z.unknown(),

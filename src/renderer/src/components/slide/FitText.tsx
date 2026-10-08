@@ -10,10 +10,43 @@ import type { TextStyle } from '@shared/types'
 const cache = new Map<string, number>()
 const CACHE_MAX = 3000
 
+/**
+ * Closest Windows font for each macOS-only font, so themes made on a Mac (and
+ * the built-in ones) keep their character on Windows. Listed after the chosen
+ * font, so a machine that has the original still uses it.
+ */
+const SUBSTITUTES: Record<string, string[]> = {
+  'Helvetica Neue': ['Segoe UI'],
+  Helvetica: ['Arial'],
+  'Avenir Next': ['Segoe UI'],
+  Avenir: ['Segoe UI'],
+  Seravek: ['Segoe UI'],
+  Futura: ['Century Gothic'],
+  'Gill Sans': ['Gill Sans MT'],
+  Optima: ['Candara'],
+  Baskerville: ['Baskerville Old Face', 'Palatino Linotype'],
+  Palatino: ['Palatino Linotype'],
+  Didot: ['Bodoni MT', 'Palatino Linotype'],
+  'Hoefler Text': ['Palatino Linotype'],
+  'Big Caslon': ['Palatino Linotype'],
+  Charter: ['Cambria'],
+  'Iowan Old Style': ['Cambria'],
+  Copperplate: ['Copperplate Gothic Bold'],
+  'American Typewriter': ['Courier New'],
+  'Marker Felt': ['Comic Sans MS'],
+  'Chalkboard SE': ['Comic Sans MS'],
+  Menlo: ['Consolas']
+}
+
+export function fontStack(family: string): string {
+  const names = [family, ...(SUBSTITUTES[family] ?? [])].map((f) => `"${f}"`).join(', ')
+  return `${names}, -apple-system, "Helvetica Neue", "Segoe UI", Helvetica, Arial, sans-serif`
+}
+
 export function textCss(s: TextStyle): CSSProperties {
   const shadow = s.shadow.enabled ? `${s.shadow.x}px ${s.shadow.y}px ${s.shadow.blur}px ${s.shadow.color}` : 'none'
   return {
-    fontFamily: `"${s.fontFamily}", -apple-system, "Helvetica Neue", Helvetica, Arial, sans-serif`,
+    fontFamily: fontStack(s.fontFamily),
     fontWeight: s.fontWeight,
     fontStyle: s.italic ? 'italic' : 'normal',
     color: s.color,

@@ -4,14 +4,24 @@
  * `appId`/`productName` in electron-builder.yml.
  */
 export const BRAND = {
-  name: 'WorshipFlow',
+  name: 'FaithCast',
+  /** The logo's two-tone wordmark: first part in ink, second in brand blue. */
+  wordmark: ['Faith', 'Cast'],
+  tagline: 'Worship presentation for every church',
+  /** Must match appId in electron-builder.yml (Windows taskbar grouping uses it). */
+  appId: 'com.faithcast.app',
   /** Used for file extensions and URL schemes — lowercase, no spaces. */
-  slug: 'worshipflow',
-  mediaScheme: 'wfmedia',
+  slug: 'faithcast',
+  mediaScheme: 'fcmedia',
+  /**
+   * The app's previous name. Its files, backups and data folder are still read,
+   * so a church upgrading from it keeps everything.
+   */
+  legacy: { name: 'WorshipFlow', slug: 'worshipflow', bibleExtension: 'wfbible' },
   fileExtensions: {
     service: 'churchservice',
     song: 'song',
     theme: 'theme',
-    bible: 'wfbible'
+    bible: 'fcbible'
   }
 } as const

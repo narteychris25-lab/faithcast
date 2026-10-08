@@ -7,8 +7,8 @@ import { paths } from '../paths'
 import { mimeFor } from './types'
 
 /**
- * wfmedia://media/<id>  → the media file registered in the database
- * wfmedia://thumb/<id>  → its cached thumbnail
+ * fcmedia://media/<id>  → the media file registered in the database
+ * fcmedia://thumb/<id>  → its cached thumbnail
  *
  * Only ids known to the database are served — arbitrary filesystem paths
  * can never be requested. Range requests are supported so video can seek

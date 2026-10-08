@@ -1,4 +1,5 @@
 import { z } from 'zod'
+import { BRAND } from '@shared/brand'
 
 /**
  * Runtime validation for everything that enters the main process from a
@@ -209,8 +210,9 @@ export const ChurchSchema = z
 
 export const RenderSlideSchema = z.any() // live payloads are produced by our own renderer; size-limited below
 
-export const WfBibleSchema = z.object({
-  format: z.literal('worshipflow-bible'),
+export const FcBibleSchema = z.object({
+  // Files from before the rename say "worshipflow-bible"
+  format: z.enum(['faithcast-bible', `${BRAND.legacy.slug}-bible`]).transform(() => 'faithcast-bible' as const),
   version: z.literal(1),
   abbreviation: z.string().min(1).max(12).regex(/^[\w-]+$/, 'Abbreviation may only contain letters, numbers, - and _'),
   name: z.string().min(1).max(200),

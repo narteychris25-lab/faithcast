@@ -15,10 +15,10 @@ test('recovers after a hard crash mid-presentation and tolerates missing media',
   const victim = join(dataDir, 'will-be-deleted.jpg')
   copyFileSync(join(process.cwd(), 'resources/demo/welcome-background.jpg'), victim)
   const serviceId = await page.evaluate(async (path) => {
-    const r = await window.wf.invoke('media:import', { paths: [path] })
-    const d = await window.wf.invoke('dashboard:get', undefined as never)
+    const r = await window.fc.invoke('media:import', { paths: [path] })
+    const d = await window.fc.invoke('dashboard:get', undefined as never)
     const svc = d.recent.find((s) => s.name === 'Sunday Service (Demo)')!
-    await window.wf.invoke('items:add', { serviceId: svc.id, item: { type: 'image', title: 'Deleted Image', data: { mediaId: r.ids[0] } }, position: 0 })
+    await window.fc.invoke('items:add', { serviceId: svc.id, item: { type: 'image', title: 'Deleted Image', data: { mediaId: r.ids[0] } }, position: 0 })
     return svc.id
   }, victim)
   rmSync(victim)
@@ -49,7 +49,7 @@ test('recovers after a hard crash mid-presentation and tolerates missing media',
   ;({ app, page } = await launch(dataDir))
   await expect(page.getByText(/recovered from an unexpected shutdown/)).toBeVisible({ timeout: 20_000 })
   await page.screenshot({ path: `${shots}/21-recovery.png` })
-  const snap = await page.evaluate(() => window.wf.invoke('app:recovery', undefined as never))
+  const snap = await page.evaluate(() => window.fc.invoke('app:recovery', undefined as never))
   expect(snap.lastLive?.itemId).toBeTruthy()
   await page.getByRole('button', { name: 'Resume presentation' }).click()
   await expect(page.getByTestId('output-status')).toContainText(/Preview window|Display/)

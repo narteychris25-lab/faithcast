@@ -6,7 +6,7 @@
   "language": "English",
   "license": "Public domain (outside the UK; Crown copyright applies in the United Kingdom)",
   "status": "public-domain",
-  "file": "KJV.wfbible.json.gz",
+  "file": "KJV.fcbible.json.gz",
   "verses": 31102,
   "books": 66,
   "core": true
@@ -18,7 +18,7 @@
   "language": "English",
   "license": "Public domain (dedicated April 2023)",
   "status": "public-domain",
-  "file": "BSB.wfbible.json.gz",
+  "file": "BSB.fcbible.json.gz",
   "verses": 31086,
   "books": 66,
   "core": true
@@ -30,7 +30,7 @@
   "language": "English",
   "license": "Public domain",
   "status": "public-domain",
-  "file": "BBE.wfbible.json.gz",
+  "file": "BBE.fcbible.json.gz",
   "verses": 31088,
   "books": 66
  },
@@ -41,7 +41,7 @@
   "language": "English",
   "license": "Public domain",
   "status": "public-domain",
-  "file": "ASV.wfbible.json.gz",
+  "file": "ASV.fcbible.json.gz",
   "verses": 31086,
   "books": 66
  },
@@ -52,7 +52,7 @@
   "language": "English",
   "license": "Public domain",
   "status": "public-domain",
-  "file": "DARBY.wfbible.json.gz",
+  "file": "DARBY.fcbible.json.gz",
   "verses": 31099,
   "books": 66
  },
@@ -63,7 +63,7 @@
   "language": "English",
   "license": "Public domain",
   "status": "public-domain",
-  "file": "DRA.wfbible.json.gz",
+  "file": "DRA.fcbible.json.gz",
   "verses": 31233,
   "books": 66
  },
@@ -74,7 +74,7 @@
   "language": "English",
   "license": "CC BY-SA 4.0 — Free Bible Version, Jonathan Gallagher",
   "status": "open",
-  "file": "FBV.wfbible.json.gz",
+  "file": "FBV.fcbible.json.gz",
   "verses": 31087,
   "books": 66
  },
@@ -85,7 +85,7 @@
   "language": "English",
   "license": "Public domain",
   "status": "public-domain",
-  "file": "GNV.wfbible.json.gz",
+  "file": "GNV.fcbible.json.gz",
   "verses": 31090,
   "books": 66
  },
@@ -96,7 +96,7 @@
   "language": "English",
   "license": "CC BY-SA 4.0 — Literal Standard Version, Covenant Press",
   "status": "open",
-  "file": "LSV.wfbible.json.gz",
+  "file": "LSV.fcbible.json.gz",
   "verses": 31104,
   "books": 66
  },
@@ -107,7 +107,7 @@
   "language": "English",
   "license": "Public domain (dedicated April 2023)",
   "status": "public-domain",
-  "file": "MSB.wfbible.json.gz",
+  "file": "MSB.fcbible.json.gz",
   "verses": 31086,
   "books": 66
  },
@@ -118,7 +118,7 @@
   "language": "English",
   "license": "Public domain",
   "status": "public-domain",
-  "file": "RV1885.wfbible.json.gz",
+  "file": "RV1885.fcbible.json.gz",
   "verses": 31087,
   "books": 66
  },
@@ -129,7 +129,7 @@
   "language": "English",
   "license": "Public domain (World English Bible)",
   "status": "public-domain",
-  "file": "WEB.wfbible.json.gz",
+  "file": "WEB.fcbible.json.gz",
   "verses": 31098,
   "books": 66
  },
@@ -140,7 +140,7 @@
   "language": "English",
   "license": "Public domain (World English Bible)",
   "status": "public-domain",
-  "file": "WEBBE.wfbible.json.gz",
+  "file": "WEBBE.fcbible.json.gz",
   "verses": 31098,
   "books": 66
  },
@@ -151,7 +151,7 @@
   "language": "English",
   "license": "Public domain",
   "status": "public-domain",
-  "file": "YLT.wfbible.json.gz",
+  "file": "YLT.fcbible.json.gz",
   "verses": 31102,
   "books": 66
  }

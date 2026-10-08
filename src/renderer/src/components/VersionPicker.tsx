@@ -1,9 +1,10 @@
 import { useEffect, useRef, useState } from 'react'
 import type { BibleTranslation } from '@shared/types'
 import { cx } from '@/lib/format'
+import { comboLabel } from '@/lib/shortcuts'
 
-/** Remembered Bible-page version (per Mac); cleared when a new default is chosen in Settings → Bibles. */
-export const VERSION_PREF = 'wf.bible.version'
+/** Remembered Bible-page version (per computer); cleared when a new default is chosen in Settings → Bibles. */
+export const VERSION_PREF = 'fc.bible.version'
 
 /**
  * One-click Bible version buttons (KJV · NKJV · ESV…) instead of a dropdown.
@@ -78,7 +79,7 @@ export function VersionPicker({
             role="radio"
             aria-checked={on}
             aria-label={`${t.abbreviation} — ${t.name}`}
-            data-tip={`${t.name}${shortcuts && i < 9 ? ` · ⌥${i + 1}` : ''}`}
+            data-tip={`${t.name}${shortcuts && i < 9 ? ` · ${comboLabel(`Alt+Digit${i + 1}`)}` : ''}`}
             onClick={() => onChange(t.id)}
             className={cx(
               'h-7 min-w-11 shrink-0 rounded-md border px-2 text-[12px] font-semibold tracking-wide transition-colors',

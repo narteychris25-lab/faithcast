@@ -9,6 +9,8 @@ import { useApp } from '@/stores/app'
 import { useService } from '@/stores/service'
 import { useLive } from '@/stores/live'
 import { quickItem } from '@/views/songs/SongsView'
+import { isMod } from '@/lib/platform'
+import { comboLabel } from '@/lib/shortcuts'
 
 const KIND: Record<SearchResult['kind'], { label: string; icon: LucideIcon }> = {
   song: { label: 'Songs', icon: Music },
@@ -19,7 +21,7 @@ const KIND: Record<SearchResult['kind'], { label: string; icon: LucideIcon }> = 
   slide: { label: 'Slides & announcements', icon: Shapes }
 }
 
-/** ⌘K global search across songs, Bible, services, media, slides and themes. */
+/** ⌘K / Ctrl+K global search across songs, Bible, services, media, slides and themes. */
 export function SearchPalette() {
   const open = useApp((s) => s.searchOpen)
   const setOpen = useApp((s) => s.setSearchOpen)
@@ -96,12 +98,12 @@ export function SearchPalette() {
               if (e.key === 'Escape') setOpen(false)
               if (e.key === 'ArrowDown') { e.preventDefault(); setActive(Math.min(flat.length - 1, active + 1)) }
               if (e.key === 'ArrowUp') { e.preventDefault(); setActive(Math.max(0, active - 1)) }
-              if (e.key === 'Enter' && flat[active]) choose(flat[active], e.metaKey)
+              if (e.key === 'Enter' && flat[active]) choose(flat[active], isMod(e))
             }}
           />
         </div>
         <div className="max-h-[55vh] overflow-auto p-2">
-          {!q && <div className="p-6 text-center text-[13px] text-dim">Type to search. Press <b>Return</b> to open, <b>⌘Return</b> to present a song or verse immediately.</div>}
+          {!q && <div className="p-6 text-center text-[13px] text-dim">Type to search. Press <b>{comboLabel('Enter')}</b> to open, <b>{comboLabel('Mod+Enter')}</b> to present a song or verse immediately.</div>}
           {q && flat.length === 0 && <div className="p-6 text-center text-[13px] text-dim">No results for “{q}”.</div>}
           {grouped.map(([kind, list]) => {
             const K = KIND[kind]

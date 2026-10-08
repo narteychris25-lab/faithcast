@@ -11,8 +11,8 @@ type Mode = 'fullscreen' | 'preview'
  * Owns the audience-facing output window.
  *
  * - With a second display selected, the window covers that display
- *   completely (borderless, above the menu bar) or uses native macOS
- *   fullscreen, depending on settings.
+ *   completely (borderless, above the menu bar / taskbar) or uses native
+ *   OS fullscreen, depending on settings.
  * - With no second display, it opens as a resizable 16:9 preview window
  *   on the operator's screen.
  *

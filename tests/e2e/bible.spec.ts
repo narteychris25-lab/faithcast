@@ -18,7 +18,7 @@ async function output(app: ElectronApplication): Promise<Page> {
 async function goToChapter(page: Page, keys: string) {
   const book = page.getByLabel('Scripture reference')
   await book.click()
-  await page.keyboard.press('Meta+a')
+  await page.keyboard.press('ControlOrMeta+a')
   await page.keyboard.press('Backspace')
   await page.keyboard.type(keys)
 }
@@ -175,7 +175,7 @@ test('Settings → Bibles: install, make default, remove, reinstall; import thia
   await expect(installed).not.toContainText('American Standard Version 1901')
   await expect(lib).toContainText('American Standard Version 1901')
   await expect(installed.locator('li', { hasText: 'King James Version' })).toContainText('Default')
-  expect(await page.evaluate(() => window.wf.invoke('bible:schedule', undefined as never))).toHaveLength(0)
+  expect(await page.evaluate(() => window.fc.invoke('bible:schedule', undefined as never))).toHaveLength(0)
 
   // Even KJV can be removed and reinstalled; the last version can't be removed
   await installed.getByRole('button', { name: 'Remove KJV' }).click()
@@ -185,7 +185,7 @@ test('Settings → Bibles: install, make default, remove, reinstall; import thia
   await installed.getByRole('button', { name: 'Remove BSB' }).click()
   await expect(page.getByRole('status')).toContainText('Keep at least one Bible version')
   await expect(page.getByRole('dialog')).toHaveCount(0)
-  await expect(page.evaluate((id) => window.wf.invoke('bible:deleteTranslation', id), await page.evaluate(() => window.wf.invoke('bible:translations', undefined as never).then((t) => t[0].id)))).rejects.toThrow(/at least one/)
+  await expect(page.evaluate((id) => window.fc.invoke('bible:deleteTranslation', id), await page.evaluate(() => window.fc.invoke('bible:translations', undefined as never).then((t) => t[0].id)))).rejects.toThrow(/at least one/)
   await lib.getByRole('button', { name: /Install King James Version/ }).click()
   await expect(installed).toContainText('King James Version', { timeout: 20_000 })
 
@@ -220,13 +220,13 @@ test('Settings → Bibles: install, make default, remove, reinstall; import thia
   })).toBe(true)
 
   // Import files in the thiagobodruk format; copyrighted versions get a licence reminder
-  const tmp = mkdtempSync(join(tmpdir(), 'wf-bib-'))
+  const tmp = mkdtempSync(join(tmpdir(), 'fc-bib-'))
   const file = join(tmp, 'en_niv.xml')
   writeFileSync(file, `<?xml version='1.0' encoding='utf-8'?><bible><b id="gn" n="Gênesis"><c n="1"><v n="1">In the beginning God created the heavens and the earth.</v></c></b></bible>`)
-  const r = await page.evaluate((p) => window.wf.invoke('bible:import', [p]), file)
+  const r = await page.evaluate((p) => window.fc.invoke('bible:import', [p]), file)
   expect(r.imported[0].abbreviation).toBe('NIV')
   expect(r.warnings[0]).toMatch(/copyrighted .* permission/)
-  const list = await page.evaluate(() => window.wf.invoke('bible:translations', undefined as never))
+  const list = await page.evaluate(() => window.fc.invoke('bible:translations', undefined as never))
   expect(list.map((t) => t.abbreviation)).toContain('NIV')
   expect(list).toHaveLength(11)
   expect(list.find((t) => t.abbreviation === 'KJV')!.builtin).toBe(true)

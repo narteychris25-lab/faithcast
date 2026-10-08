@@ -60,7 +60,7 @@ export function identifyDisplays(): void {
     win.setAlwaysOnTop(true, 'screen-saver')
     const [num, ...rest] = info.label.split(' — ')
     const html = `<html><body style="margin:0;height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;
-      background:rgba(15,23,42,.92);color:#fff;font-family:-apple-system,Helvetica;border-radius:24px;border:4px solid #6366f1">
+      background:rgba(15,23,42,.92);color:#fff;font-family:-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;border-radius:24px;border:4px solid #0b6cf5">
       <div style="font-size:96px;font-weight:800">${escapeHtml(num)}</div>
       <div style="font-size:26px;opacity:.8">${escapeHtml(rest.join(' — '))} · ${info.width}×${info.height}</div></body></html>`
     void win.loadURL(`data:text/html;charset=utf-8,${encodeURIComponent(html)}`).then(() => win.showInactive())

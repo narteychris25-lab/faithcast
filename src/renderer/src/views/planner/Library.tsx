@@ -12,6 +12,7 @@ import { useContent } from '@/stores/content'
 import { Badge, Button, Input, Select } from '@/components/ui/controls'
 import { VersionPicker } from '@/components/VersionPicker'
 import { toast } from '@/components/ui/overlays'
+import { OS } from '@/lib/platform'
 
 type Picker = 'song' | 'bible' | 'image' | 'video' | 'audio'
 const PICKERS: Picker[] = ['song', 'bible', 'image', 'video', 'audio']
@@ -243,7 +244,7 @@ function MediaList({ type, onAdd }: { type: MediaType; onAdd: (items: ItemInput[
             </div>
           </button>
         ))}
-        {items.length === 0 && <div className="col-span-2 p-4 text-center text-[12px] text-dim">No {type}s yet. Import files or drag them from Finder into the service.</div>}
+        {items.length === 0 && <div className="col-span-2 p-4 text-center text-[12px] text-dim">No {type}s yet. Import files or drag them from {OS.fileManager} into the service.</div>}
       </div>
     </div>
   )

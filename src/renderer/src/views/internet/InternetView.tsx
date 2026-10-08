@@ -15,7 +15,7 @@ import { addToCurrentService, quickItem } from '@/views/songs/SongsView'
 import type { WebviewEl } from '@/webview'
 
 const HOME = 'https://www.youtube.com/'
-const START_KEY = 'wf.internet.lastUrl'
+const START_KEY = 'fc.internet.lastUrl'
 
 function startUrl(): string {
   try {
@@ -320,7 +320,7 @@ export function InternetView({ active }: { active: boolean }) {
             <WifiOff size={32} className="text-muted" />
             <div className="text-sm font-semibold">{error === 'offline' ? 'No internet connection' : 'This page could not be loaded'}</div>
             <div className="max-w-md text-[13px] text-muted">
-              {error === 'offline' ? 'The Internet section needs a connection. Everything else in WorshipFlow keeps working offline.' : error}
+              {error === 'offline' ? 'The Internet section needs a connection. Everything else in FaithCast keeps working offline.' : error}
             </div>
             <Button icon={RotateCw} onClick={() => wv()?.reload()}>Try again</Button>
           </div>

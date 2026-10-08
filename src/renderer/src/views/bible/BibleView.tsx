@@ -72,7 +72,7 @@ export function BibleView() {
   const [tab, setTab] = useState<Tab>('schedule')
   const [passages, setPassages] = useState<BiblePassage[]>([])
   const [schedule, setSchedule] = useState<ScheduledPassage[]>([])
-  const [presentOnClick, setPresentOnClick] = useState(() => readPref('wf.bible.presentOnClick', true))
+  const [presentOnClick, setPresentOnClick] = useState(() => readPref('fc.bible.presentOnClick', true))
   const live = useLiveBible()
 
   const loadPassages = () => void api('bible:passages', { favorites: tab === 'favorites', limit: 40 }).then(setPassages)
@@ -406,7 +406,7 @@ export function BibleView() {
             onChange={(v) => {
               setPresentOnClick(v)
               try {
-                localStorage.setItem('wf.bible.presentOnClick', v ? '1' : '0')
+                localStorage.setItem('fc.bible.presentOnClick', v ? '1' : '0')
               } catch {
                 /* ignore */
               }

@@ -234,7 +234,7 @@ export function migrate(db: Database.Database): number[] {
   const from = currentVersion(db)
   if (from > LATEST_VERSION) {
     throw new Error(
-      `Database schema v${from} is newer than this app supports (v${LATEST_VERSION}). Please update WorshipFlow.`
+      `Database schema v${from} is newer than this app supports (v${LATEST_VERSION}). Please update FaithCast.`
     )
   }
   const applied: number[] = []

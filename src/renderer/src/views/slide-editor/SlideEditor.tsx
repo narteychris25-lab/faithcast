@@ -40,6 +40,8 @@ import { SLIDE_ICONS } from '@/components/slide/icons'
 import { BackgroundOverride, MediaPicker, Section, TextStyleEditor } from '@/components/editors'
 import { Button, ColorInput, Field, IconButton, Input, Segmented, Slider, Textarea, Toggle } from '@/components/ui/controls'
 import { confirmDialog, openContextMenu, promptDialog, toast } from '@/components/ui/overlays'
+import { IS_MAC, isMod } from '@/lib/platform'
+import { comboLabel } from '@/lib/shortcuts'
 
 type Handle = 'nw' | 'n' | 'ne' | 'e' | 'se' | 's' | 'sw' | 'w' | 'rot'
 interface DragState {
@@ -273,9 +275,13 @@ export function SlideEditor({ item, onClose, onSave }: { item: ServiceItem; onCl
     const onKey = (e: KeyboardEvent) => {
       const t = e.target as HTMLElement
       if (t.tagName === 'INPUT' || t.tagName === 'TEXTAREA' || t.tagName === 'SELECT' || document.querySelectorAll('[data-modal]').length > 1) return
-      if (e.metaKey && e.key.toLowerCase() === 'z') {
+      if (isMod(e) && e.key.toLowerCase() === 'z') {
         e.preventDefault()
         return e.shiftKey ? redo() : undo()
+      }
+      if (!IS_MAC && e.ctrlKey && e.key.toLowerCase() === 'y') {
+        e.preventDefault()
+        return redo()
       }
       if (!sel) return
       const step = e.shiftKey ? 10 : 1
@@ -286,7 +292,7 @@ export function SlideEditor({ item, onClose, onSave }: { item: ServiceItem; onCl
       } else if (e.key === 'Backspace' || e.key === 'Delete') {
         e.preventDefault()
         removeSel()
-      } else if (e.metaKey && e.key.toLowerCase() === 'd') {
+      } else if (isMod(e) && e.key.toLowerCase() === 'd') {
         e.preventDefault()
         duplicateSel()
       } else if (e.key === 'Escape') {
@@ -347,11 +353,11 @@ export function SlideEditor({ item, onClose, onSave }: { item: ServiceItem; onCl
 
   return createPortal(
     <div className="fixed inset-0 z-40 flex flex-col bg-bg" data-modal>
-      <header className="drag flex h-12 shrink-0 items-center gap-1 border-b border-line bg-panel pr-3 pl-20">
+      <header className="drag titlebar flex h-12 shrink-0 items-center gap-1 border-b border-line bg-panel pr-3">
         <span className="mr-3 truncate text-[13px] font-semibold">Slide editor — {item.title}</span>
         <div className="no-drag flex items-center gap-1">
-          <IconButton icon={Undo2} label="Undo (⌘Z)" onClick={undo} disabled={!history.past.length} />
-          <IconButton icon={Redo2} label="Redo (⇧⌘Z)" onClick={redo} disabled={!history.future.length} />
+          <IconButton icon={Undo2} label={`Undo (${comboLabel('Mod+KeyZ')})`} onClick={undo} disabled={!history.past.length} />
+          <IconButton icon={Redo2} label={`Redo (${comboLabel(IS_MAC ? 'Mod+Shift+KeyZ' : 'Mod+KeyY')})`} onClick={redo} disabled={!history.future.length} />
           <span className="mx-1 h-6 w-px bg-line" />
           <Button size="sm" icon={Type} onClick={() => addEl({ kind: 'text', x: CW * 0.1, y: CH * 0.38, w: CW * 0.8, h: CH * 0.24, text: 'New text' })}>Text</Button>
           <Button size="sm" icon={ImageIcon} onClick={() => setPicker('image')}>Image</Button>
@@ -361,7 +367,7 @@ export function SlideEditor({ item, onClose, onSave }: { item: ServiceItem; onCl
             icon={Shapes}
             onClick={(e) =>
               openContextMenu(e, [
-                { label: 'Rectangle', icon: Square, onSelect: () => addEl({ kind: 'shape', shape: 'rect', x: CW * 0.35, y: CH * 0.35, w: CW * 0.3, h: CH * 0.3, fill: '#6d6af5', radius: 16 }) },
+                { label: 'Rectangle', icon: Square, onSelect: () => addEl({ kind: 'shape', shape: 'rect', x: CW * 0.35, y: CH * 0.35, w: CW * 0.3, h: CH * 0.3, fill: '#0b6cf5', radius: 16 }) },
                 { label: 'Ellipse', icon: Circle, onSelect: () => addEl({ kind: 'shape', shape: 'ellipse', x: CW * 0.4, y: CH * 0.3, w: CH * 0.4, h: CH * 0.4, fill: '#22c55e' }) },
                 { label: 'Triangle', icon: Triangle, onSelect: () => addEl({ kind: 'shape', shape: 'triangle', x: CW * 0.4, y: CH * 0.3, w: CH * 0.4, h: CH * 0.4, fill: '#f59e0b' }) },
                 { label: 'Line', icon: Minus, onSelect: () => addEl({ kind: 'line', x: CW * 0.25, y: CH * 0.5 - 20, w: CW * 0.5, h: 40, stroke: '#ffffff', strokeWidth: 6 }) }
@@ -392,8 +398,8 @@ export function SlideEditor({ item, onClose, onSave }: { item: ServiceItem; onCl
           <span className="mx-1 h-6 w-px bg-line" />
           <IconButton icon={BringToFront} label="Bring to front" onClick={() => layer('front')} disabled={!sel} />
           <IconButton icon={SendToBack} label="Send to back" onClick={() => layer('back')} disabled={!sel} />
-          <IconButton icon={Copy} label="Duplicate (⌘D)" onClick={duplicateSel} disabled={!sel} />
-          <IconButton icon={Trash2} label="Delete (⌫)" onClick={removeSel} disabled={!sel} />
+          <IconButton icon={Copy} label={`Duplicate (${comboLabel('Mod+KeyD')})`} onClick={duplicateSel} disabled={!sel} />
+          <IconButton icon={Trash2} label={`Delete (${comboLabel(IS_MAC ? 'Backspace' : 'Delete')})`} onClick={removeSel} disabled={!sel} />
         </div>
         <span className="flex-1" />
         <div className="no-drag flex items-center gap-2">

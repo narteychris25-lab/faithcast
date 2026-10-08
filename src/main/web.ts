@@ -23,7 +23,7 @@ export function setupWebSandbox(): void {
   ses.setPermissionCheckHandler((_wc, permission) => permission === 'fullscreen')
   ses.on('will-download', (e) => e.preventDefault()) // saving media goes through our own validated download
   // Some sites (and Google sign-in) reject unknown browsers: present as plain Chrome.
-  ses.setUserAgent(ses.getUserAgent().replace(/\s(?:WorshipFlow|Electron)\/\S+/g, ''))
+  ses.setUserAgent(ses.getUserAgent().replace(/\s(?:FaithCast|Electron)\/\S+/g, ''))
 
   app.on('web-contents-created', (_e, contents) => {
     contents.on('will-attach-webview', (event, prefs, params) => {

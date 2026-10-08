@@ -11,6 +11,7 @@ import { useService } from '@/stores/service'
 import { Badge, Button, EmptyState, Input, Select, Spinner } from '@/components/ui/controls'
 import { confirmDialog, openContextMenu, toast, type MenuEntry } from '@/components/ui/overlays'
 import { SongEditor } from './SongEditor'
+import { IS_MAC, isMod } from '@/lib/platform'
 
 export function quickItem(partial: Pick<ServiceItem, 'type' | 'title'> & Partial<ServiceItem>) {
   return { refId: null, data: {}, themeId: null, background: null, transition: null, hidden: false, locked: false, notes: '', ...partial }
@@ -147,7 +148,7 @@ export function SongsView() {
               <button
                 type="button"
                 onClick={(e) => {
-                  if (e.metaKey) {
+                  if (isMod(e)) {
                     const next = new Set(multi)
                     if (next.has(s.id)) next.delete(s.id)
                     else next.add(s.id)
@@ -186,7 +187,7 @@ export function SongsView() {
           <SongEditor key={selected} songId={selected} onChanged={reload} onDelete={() => void deleteSongs([selected])} />
         ) : (
           <EmptyState icon={Music} title="Select a song" action={<Button variant="primary" icon={Plus} onClick={() => void newSong()}>New song</Button>}>
-            Pick a song on the left to edit its lyrics, or create a new one. ⌘-click to select several for export.
+            Pick a song on the left to edit its lyrics, or create a new one. {IS_MAC ? '⌘' : 'Ctrl'}-click to select several for export.
           </EmptyState>
         )}
       </main>

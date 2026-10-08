@@ -2,10 +2,12 @@ import { useEffect, useState, type ReactNode } from 'react'
 import { Archive, Library, Building2, Cog, Database, HardDrive, Image as ImageIcon, Keyboard, Monitor, Palette, Presentation, RotateCcw, ScanEye, Trash2, Upload, Volume2, Wrench, X } from 'lucide-react'
 import type { AppSettings, BackupInfo, ShortcutAction } from '@shared/types'
 import type { AppInfo } from '@shared/ipc'
+import { BRAND } from '@shared/brand'
 import { DEFAULT_SHORTCUTS, SHORTCUT_LABELS } from '@shared/defaults'
 import { api } from '@/lib/api'
 import { bytes, cx, relativeTime } from '@/lib/format'
 import { comboLabel, eventCombo } from '@/lib/shortcuts'
+import { IS_MAC, OS } from '@/lib/platform'
 import { useApp } from '@/stores/app'
 import { useContent } from '@/stores/content'
 import { effectiveDisplayId, useLive } from '@/stores/live'
@@ -13,6 +15,7 @@ import { Badge, Button, Field, Input, Kbd, Segmented, Select, Slider, Toggle } f
 import { confirmDialog, toast } from '@/components/ui/overlays'
 import { MediaField, ThemeSelect, TransitionEditor } from '@/components/editors'
 import { BibleVersions } from './BibleVersions'
+import { Logo } from '@/components/Logo'
 
 type Tab = 'general' | 'presentation' | 'displays' | 'audio' | 'keyboard' | 'bibles' | 'database' | 'media' | 'themes' | 'church' | 'backup' | 'advanced'
 const TABS: { id: Tab; label: string; icon: typeof Cog }[] = [
@@ -103,7 +106,7 @@ function General() {
           options={[
             { value: 'dark', label: 'Dark' },
             { value: 'light', label: 'Light' },
-            { value: 'system', label: 'Match macOS' }
+            { value: 'system', label: `Match ${OS.name}` }
           ]}
         />
         <p className="text-[12px] text-muted">Dark is recommended in a dim sanctuary or sound booth; Light suits daytime planning.</p>
@@ -146,8 +149,8 @@ function PresentationTab() {
         <Field label="Aspect ratio">
           <Segmented value={s.presentation.aspectRatio} onChange={(v) => save({ presentation: { aspectRatio: v } })} options={[{ value: '16:9', label: '16:9 (TV / modern projector)' }, { value: '16:10', label: '16:10' }, { value: '4:3', label: '4:3 (older projector)' }]} />
         </Field>
-        <Field label="Fullscreen method" hint="Borderless covers the whole display instantly and is recommended. Native uses macOS full-screen Spaces.">
-          <Segmented value={s.presentation.fullscreenMode} onChange={(v) => save({ presentation: { fullscreenMode: v } })} options={[{ value: 'borderless', label: 'Borderless (recommended)' }, { value: 'native', label: 'macOS native' }]} />
+        <Field label="Fullscreen method" hint={`Borderless covers the whole display instantly and is recommended. Native uses ${IS_MAC ? 'macOS full-screen Spaces' : `${OS.name} full-screen mode`}.`}>
+          <Segmented value={s.presentation.fullscreenMode} onChange={(v) => save({ presentation: { fullscreenMode: v } })} options={[{ value: 'borderless', label: 'Borderless (recommended)' }, { value: 'native', label: `${OS.name} native` }]} />
         </Field>
         <Field label="Preview window size (when no second display)">
           <Slider value={s.presentation.previewWindowScale} min={0.25} max={0.8} step={0.05} onChange={(v) => save({ presentation: { previewWindowScale: v } })} format={(v) => `${Math.round(v * 100)}% of screen`} />
@@ -167,7 +170,7 @@ function Displays() {
   const current = effectiveDisplayId()
   return (
     <>
-      <Card title="Detected displays" desc="Displays are detected automatically, including ones connected while WorshipFlow is running.">
+      <Card title="Detected displays" desc="Displays are detected automatically, including ones connected while FaithCast is running.">
         <div className="flex flex-col gap-2">
           {displays.map((d) => (
             <div key={d.id} className={cx('flex items-center gap-3 rounded-md border p-3', current === d.id ? 'border-live/60 bg-live/5' : 'border-line')}>
@@ -238,7 +241,7 @@ function AudioTab() {
     }, 800)
   }
   return (
-    <Card title="Service audio" desc="Audio items (and the church's walk-in music) play through this device. Video sound plays through the macOS default output.">
+    <Card title="Service audio" desc={`Audio items (and the church's walk-in music) play through this device. Video sound plays through the ${OS.name} default output.`}>
       <Field label="Output device">
         <Select value={s.audio.outputDeviceId} onChange={(e) => save({ audio: { outputDeviceId: e.target.value } })}>
           {devices.length === 0 && <option value="default">System default</option>}
@@ -312,7 +315,7 @@ function DatabaseTab() {
   }, [])
   return (
     <>
-      <Card title="Local database" desc="Everything is stored on this Mac in a crash-safe SQLite database. No internet or account is needed.">
+      <Card title="Local database" desc={`Everything is stored on this ${OS.computer} in a crash-safe SQLite database. No internet or account is needed.`}>
         {info && <div className="rounded bg-panel-2 p-2 font-mono text-[11px] break-all text-muted">{info.dbPath}</div>}
         {counts && (
           <div className="grid grid-cols-5 gap-2 text-center">
@@ -322,7 +325,7 @@ function DatabaseTab() {
           </div>
         )}
         <div className="flex gap-2">
-          <Button icon={HardDrive} onClick={() => info && void api('app:showInFolder', info.dbPath)}>Show in Finder</Button>
+          <Button icon={HardDrive} onClick={() => info && void api('app:showInFolder', info.dbPath)}>{OS.showInFolder}</Button>
           <Button
             icon={Trash2}
             variant="danger"
@@ -342,7 +345,7 @@ function DatabaseTab() {
 
 function MediaTab() {
   return (
-    <Card title="Media files" desc="Media stays where it is on your Mac — WorshipFlow stores a reference and a small thumbnail. If you move or rename files, use “Check files” to find them again.">
+    <Card title="Media files" desc={`Media stays where it is on your ${OS.computer} — FaithCast stores a reference and a small thumbnail. If you move or rename files, use “Check files” to find them again.`}>
       <div className="flex gap-2">
         <Button onClick={async () => {
           const r = await api('media:checkMissing')
@@ -351,7 +354,11 @@ function MediaTab() {
         }}>Check all media files</Button>
         <Button onClick={() => useApp.getState().navigate('media')}>Open media library</Button>
       </div>
-      <p className="text-[12px] text-muted">Supported: JPEG, PNG, GIF, WebP, HEIC (converted), MP4/MOV (H.264, HEVC), WebM, MP3, M4A, WAV, AAC, FLAC. AVI/WMV are not playable on macOS without conversion.</p>
+      <p className="text-[12px] text-muted">
+        {IS_MAC
+          ? 'Supported: JPEG, PNG, GIF, WebP, HEIC (converted), MP4/MOV (H.264, HEVC), WebM, MP3, M4A, WAV, AAC, FLAC. AVI/WMV are not playable on macOS without conversion.'
+          : 'Supported: JPEG, PNG, GIF, WebP, BMP, MP4/MOV (H.264; HEVC needs the HEVC Video Extensions from the Microsoft Store), WebM, MP3, M4A, WAV, AAC, FLAC. Save HEIC/TIFF photos as JPEG first; AVI/WMV need converting to MP4.'}
+      </p>
     </Card>
   )
 }
@@ -411,7 +418,7 @@ function BackupTab() {
   async function restore(b: BackupInfo) {
     const ok = await confirmDialog({
       title: 'Restore this backup?',
-      message: `Everything will be returned to how it was ${relativeTime(b.createdAt)}. A safety backup of the current data is taken first. WorshipFlow will restart.`,
+      message: `Everything will be returned to how it was ${relativeTime(b.createdAt)}. A safety backup of the current data is taken first. FaithCast will restart.`,
       danger: true,
       confirmLabel: 'Restore and restart'
     })
@@ -419,7 +426,7 @@ function BackupTab() {
   }
   return (
     <>
-      <Card title="Automatic backups" desc="A backup is taken once a day when WorshipFlow starts, and before any database upgrade.">
+      <Card title="Automatic backups" desc="A backup is taken once a day when FaithCast starts, and before any database upgrade.">
         <Toggle checked={s.backup.autoBackup} onChange={(v) => save({ backup: { autoBackup: v } })} label="Back up automatically" />
         <Field label="Automatic backups to keep">
           <Slider value={s.backup.keep} min={3} max={60} step={1} onChange={(v) => save({ backup: { keep: v } })} format={(v) => String(v)} />
@@ -457,10 +464,14 @@ function AdvancedTab() {
   return (
     <>
       <Card title="About">
+        <div className="flex items-center gap-3">
+          <Logo size={40} />
+          <span className="text-[12px] text-muted">{BRAND.tagline}</span>
+        </div>
         {info && (
           <div className="grid grid-cols-2 gap-y-1 text-[12px]">
             <span className="text-muted">Version</span><span>{info.name} {info.version}</span>
-            <span className="text-muted">Platform</span><span>macOS · {info.arch === 'arm64' ? 'Apple Silicon' : 'Intel'}</span>
+            <span className="text-muted">Platform</span><span>{IS_MAC ? `macOS · ${info.arch === 'arm64' ? 'Apple Silicon' : 'Intel'}` : `${OS.name} · ${info.arch}`}</span>
             <span className="text-muted">Engine</span><span>Electron {info.electron} · Chromium {info.chrome}</span>
             <span className="text-muted">Build</span><span>{info.isPackaged ? 'Installed app' : 'Development'}</span>
             <span className="text-muted">Data folder</span><span className="break-all">{info.dataDir}</span>
@@ -468,7 +479,7 @@ function AdvancedTab() {
         )}
         <div className="flex gap-2">
           <Button icon={HardDrive} onClick={() => info && void api('app:showInFolder', info.dbPath)}>Open data folder</Button>
-          <Button onClick={() => void api('app:relaunch')}>Restart WorshipFlow</Button>
+          <Button onClick={() => void api('app:relaunch')}>Restart FaithCast</Button>
         </div>
       </Card>
       <Card title="Setup">

@@ -6,15 +6,15 @@ import Database from 'better-sqlite3'
 
 let dir: string
 beforeEach(() => {
-  dir = mkdtempSync(join(tmpdir(), 'wf-io-'))
-  process.env.WORSHIPFLOW_DATA_DIR = dir
+  dir = mkdtempSync(join(tmpdir(), 'fc-io-'))
+  process.env.FAITHCAST_DATA_DIR = dir
 })
 afterEach(() => rmSync(dir, { recursive: true, force: true }))
 
 async function fresh() {
   const { openDatabase } = await import('../../src/main/db/connection')
   const { createRepos } = await import('../../src/main/db/repos')
-  const db = openDatabase(join(dir, 'wf.db')).db
+  const db = openDatabase(join(dir, 'fc.db')).db
   const repos = createRepos(db)
   repos.themes.ensureBuiltins()
   return { db, repos }
@@ -123,7 +123,7 @@ describe('thiagobodruk/bible formats', () => {
     expect(bible.books.find((b) => b.number === 1)!.chapters[0]).toEqual(['In the beginning & more', 'Second'])
     expect(bible.books.find((b) => b.number === 43)!.chapters[2][15]).toBe('For God')
   })
-  it('still reads WorshipFlow and Zefania files through the same entry point', async () => {
+  it('still reads FaithCast and Zefania files through the same entry point', async () => {
     const { readBibleFileDetailed } = await import('../../src/main/io/bible')
     const z = join(dir, 'z.xml')
     writeFileSync(z, `<XMLBIBLE biblename="Zed"><BIBLEBOOK bnumber="1"><CHAPTER cnumber="1"><VERS vnumber="1">Z</VERS></CHAPTER></BIBLEBOOK></XMLBIBLE>`)
@@ -151,7 +151,7 @@ describe('service packages', () => {
     db.close()
 
     // New empty database; original media file removed.
-    rmSync(join(dir, 'wf.db'))
+    rmSync(join(dir, 'fc.db'))
     rmSync(img)
     const second = await fresh()
     const imported = importServicePackage(second.repos, file)
@@ -183,8 +183,8 @@ describe('backup and restore', () => {
     writeFileSync(join(dir, 'fake.db'), 'hello')
     expect(() => validateBackup(join(dir, 'fake.db'))).toThrow()
 
-    replaceDatabaseFile(b.file, join(dir, 'wf.db'))
-    const check = new Database(join(dir, 'wf.db'), { readonly: true })
+    replaceDatabaseFile(b.file, join(dir, 'fc.db'))
+    const check = new Database(join(dir, 'fc.db'), { readonly: true })
     const names = (check.prepare('SELECT name FROM services').all() as { name: string }[]).map((r) => r.name)
     check.close()
     expect(names).toEqual(['Before'])
@@ -200,7 +200,7 @@ describe('backup and restore', () => {
     expect(again.repos.settings.getState('session.running', false)).toBe(true)
     expect(again.repos.settings.getState<{ slideIndex: number } | null>('live.snapshot', null)!.slideIndex).toBe(3)
     expect(again.repos.drafts.get<{ title: string }>('song:1')!.title).toBe('X')
-    expect(readFileSync(join(dir, 'wf.db')).length).toBeGreaterThan(0)
+    expect(readFileSync(join(dir, 'fc.db')).length).toBeGreaterThan(0)
     again.db.close()
   })
 })

@@ -3,6 +3,7 @@ import { SHORTCUT_LABELS } from '@shared/defaults'
 import type { ShortcutAction } from '@shared/types'
 import { comboLabel } from '@/lib/shortcuts'
 import { cx } from '@/lib/format'
+import { IS_MAC, OS } from '@/lib/platform'
 import { useApp } from '@/stores/app'
 import { Kbd } from '@/components/ui/controls'
 
@@ -21,6 +22,8 @@ const Steps = ({ items }: { items: ReactNode[] }) => (
   </ol>
 )
 const B = ({ children }: { children: ReactNode }) => <b className="text-fg">{children}</b>
+/** A key combo in this platform's notation, e.g. <K c="Mod+KeyD" /> → ⌘D or Ctrl+D. */
+const K = ({ c }: { c: string }) => <Kbd>{comboLabel(c)}</Kbd>
 
 const ARTICLES: Article[] = [
   {
@@ -33,7 +36,7 @@ const ARTICLES: Article[] = [
           items={[
             <>On the <B>Dashboard</B>, click <B>New service</B> and give it a name.</>,
             <>The <B>Service Planner</B> opens. Use the left panel to add items: pick a type, then click (or drag) content into the service list.</>,
-            <>Drag items by their handle to reorder, or use <Kbd>⌥↑</Kbd>/<Kbd>⌥↓</Kbd>. Right-click an item to rename, duplicate, hide, lock or delete it.</>,
+            <>Drag items by their handle to reorder, or use <K c="Alt+ArrowUp" />/<K c="Alt+ArrowDown" />. Right-click an item to rename, duplicate, hide, lock or delete it.</>,
             <>Select an item to edit its properties on the right: text, theme, background, transition and media settings.</>,
             <>Click <B>Service settings</B> to set the date, the theme for the whole service, and a service-wide background.</>,
             <>Everything saves automatically — watch the <B>Saved</B> indicator next to the service name.</>
@@ -58,7 +61,7 @@ const ARTICLES: Article[] = [
             <>The right side shows exactly how each slide will look. Changes save automatically.</>
           ]}
         />
-        <P>Import songs with <B>Import</B>: WorshipFlow .song files, plain text (including CCLI SongSelect .txt exports), JSON and OpenLyrics XML.</P>
+        <P>Import songs with <B>Import</B>: FaithCast .song files, plain text (including CCLI SongSelect .txt exports), JSON and OpenLyrics XML.</P>
       </>
     )
   },
@@ -69,17 +72,17 @@ const ARTICLES: Article[] = [
       <>
         <Steps
           items={[
-            <>In the planner, choose <B>Bible</B> in the left panel and start typing the book: <code>jo</code> completes to <B>Joshua</B>, <code>joh</code> to <B>John</B>. Press <Kbd>Space</Kbd> or just type the chapter number to accept it and move to the <B>Chapter</B> box, then <Kbd>:</Kbd> to move to the <B>Verse</B> box — e.g. <code>joh3:16-18</code> fills John · 3 · 16-18. Press Return to add it.</>,
+            <>In the planner, choose <B>Bible</B> in the left panel and start typing the book: <code>jo</code> completes to <B>Joshua</B>, <code>joh</code> to <B>John</B>. Press <Kbd>Space</Kbd> or just type the chapter number to accept it and move to the <B>Chapter</B> box, then <Kbd>:</Kbd> to move to the <B>Verse</B> box — e.g. <code>joh3:16-18</code> fills John · 3 · 16-18. Press {comboLabel('Enter')} to add it.</>,
             <>Use <Kbd>↑</Kbd>/<Kbd>↓</Kbd> to pick a different suggested book, <Kbd>Backspace</Kbd> to remove the suggestion, <Kbd>Esc</Kbd> to dismiss the list. Numbered books work too: <code>1 co</code> → 1 Corinthians.</>,
             <>On the <B>Bible</B> page, the same box jumps to the passage as you type. Or choose a book and chapter, click a verse, and Shift-click another to select a range. Use the <B>Search words</B> box to find verses by their text.</>,
-            <><B>Switch versions in one click:</B> the version buttons (e.g. <B>KJV</B> <B>NKJV</B> <B>ESV</B>) are under the Bible heading, or press <Kbd>⌥1</Kbd>–<Kbd>⌥9</Kbd>. If a verse from the chapter you're viewing is on screen, it changes to the new version straight away. The Bible page remembers the version you used last.</>,
+            <><B>Switch versions in one click:</B> the version buttons (e.g. <B>KJV</B> <B>NKJV</B> <B>ESV</B>) are under the Bible heading, or press <K c="Alt+Digit1" />–<K c="Alt+Digit9" />. If a verse from the chapter you're viewing is on screen, it changes to the new version straight away. The Bible page remembers the version you used last.</>,
             <><B>Click a verse to put it on screen straight away</B> (the <B>Present on click</B> switch above the verses). Press <Kbd>→</Kbd> for the next verse, or Shift-click to present a range. The verse on screen is marked <B>LIVE</B>, and a small live monitor with Next/Black/Clear appears on the right — no need to leave the Bible page.</>,
             <><B>Scripture schedule:</B> before the service, select each reading and click <B>Add to schedule</B>. During the service, click a passage in the <B>Schedule</B> tab to present it. Reorder or remove with the buttons beside each passage; <B>Add all to service</B> copies them into the running order. The schedule is saved.</>,
             <>Choose how many verses per slide, then <B>Add to service</B> or <B>Present</B>.</>,
             <>Star passages to keep them in <B>Favourites</B>; recently used passages are listed automatically.</>
           ]}
         />
-        <P>The King James Version and Berean Standard Bible are installed. Go to <B>Settings → Bibles</B> (or click <B>Versions</B> on the Bible page) to manage versions: install any of 12 more free English versions with one click (no internet needed), choose the default version, or remove a version you don't use. Removing a version also removes its scripture-schedule entries, and you are told first if any service items use it; free versions can be reinstalled at any time. For copyrighted versions (NIV, ESV, NKJV…), use <B>Import from file…</B> only if your church has the publisher's permission. Supported files: WorshipFlow .wfbible/JSON, JSON or XML from github.com/thiagobodruk/bible, Zefania XML and CSV (book, chapter, verse, text).</P>
+        <P>The King James Version and Berean Standard Bible are installed. Go to <B>Settings → Bibles</B> (or click <B>Versions</B> on the Bible page) to manage versions: install any of 12 more free English versions with one click (no internet needed), choose the default version, or remove a version you don't use. Removing a version also removes its scripture-schedule entries, and you are told first if any service items use it; free versions can be reinstalled at any time. For copyrighted versions (NIV, ESV, NKJV…), use <B>Import from file…</B> only if your church has the publisher's permission. Supported files: FaithCast .fcbible/JSON, JSON or XML from github.com/thiagobodruk/bible, Zefania XML and CSV (book, chapter, verse, text).</P>
       </>
     )
   },
@@ -90,15 +93,19 @@ const ARTICLES: Article[] = [
       <>
         <Steps
           items={[
-            <>Connect the projector/TV to your Mac (HDMI, or a USB-C/Thunderbolt adapter) and switch it on.</>,
-            <>macOS should show your desktop on it. If it mirrors your screen, open <B>System Settings → Displays</B> and turn off mirroring (“Extend” the display).</>,
-            <>WorshipFlow detects the new display and asks whether to present on it. Click <B>Present on this display</B>.</>,
+            <>Connect the projector/TV to your {OS.computer} (HDMI, or a USB-C/Thunderbolt adapter) and switch it on.</>,
+            IS_MAC ? (
+              <>macOS should show your desktop on it. If it mirrors your screen, open <B>System Settings → Displays</B> and turn off mirroring (“Extend” the display).</>
+            ) : (
+              <>Windows should show your desktop on it. If it duplicates your screen, press <Kbd>Win+P</Kbd> and choose <B>Extend</B>.</>
+            ),
+            <>FaithCast detects the new display and asks whether to present on it. Click <B>Present on this display</B>.</>,
             <>Not sure which screen is which? Click <B>Identify</B> in the Live view — each screen shows its number.</>,
-            <>Your MacBook screen keeps the operator view; the audience only sees the output.</>
+            <>Your {IS_MAC ? 'MacBook' : 'laptop'} screen keeps the operator view; the audience only sees the output.</>
           ]}
         />
         <P>If the display is unplugged during a service, the output moves to a preview window and nothing is lost. Plug it back in and the output returns automatically.</P>
-        <P>Tip: keep your Mac plugged into power. WorshipFlow prevents the display from sleeping while the output is open.</P>
+        <P>Tip: keep your {OS.computer} plugged into power. FaithCast prevents the display from sleeping while the output is open.</P>
       </>
     )
   },
@@ -147,13 +154,13 @@ const ARTICLES: Article[] = [
       <>
         <Steps
           items={[
-            <>Open <B>Media</B> and click <B>Import</B>, or drag files/folders from Finder onto the window.</>,
+            <>Open <B>Media</B> and click <B>Import</B>, or drag files/folders from {OS.fileManager} onto the window.</>,
             <>Add media to a service from the planner's Image/Video/Audio panels, or drag files straight into the service list.</>,
             <>Use an image or video as a background in any theme, item or custom slide (Background → Image/Video).</>,
             <>Audio items play without changing the screen, with fade in/out and loop options. A purple indicator shows audio is playing.</>
           ]}
         />
-        <P>Files are not copied; WorshipFlow remembers where they are. If a file is moved, it shows “Media file unavailable” and the service carries on. Right-click it → <B>Locate missing file…</B> to fix it.</P>
+        <P>Files are not copied; FaithCast remembers where they are. If a file is moved, it shows “Media file unavailable” and the service carries on. Right-click it → <B>Locate missing file…</B> to fix it.</P>
       </>
     )
   },
@@ -162,7 +169,7 @@ const ARTICLES: Article[] = [
     title: 'Internet: lyrics, YouTube & pictures',
     body: () => (
       <>
-        <P>The <B>Internet</B> page is a built-in browser. It needs an internet connection; everything else in WorshipFlow works offline.</P>
+        <P>The <B>Internet</B> page is a built-in browser. It needs an internet connection; everything else in FaithCast works offline.</P>
         <Steps
           items={[
             <><B>YouTube:</B> click <B>YouTube</B>, find the video, open it, then click <B>Play video on screen</B>. It plays full-screen on the projector (without YouTube's page around it) and the copy on your screen pauses so the sound isn't doubled. Black, Clear and Pause work as usual.</>,
@@ -186,7 +193,7 @@ const ARTICLES: Article[] = [
     title: 'Backing up data',
     body: () => (
       <>
-        <P>WorshipFlow backs up automatically once a day and before upgrades (Settings → Backup). Backups include every service, song, theme, setting and the media library list.</P>
+        <P>FaithCast backs up automatically once a day and before upgrades (Settings → Backup). Backups include every service, song, theme, setting and the media library list.</P>
         <Steps
           items={[
             <>For an extra copy, open <B>Settings → Backup</B> and click <B>Back up now</B>.</>,
@@ -207,10 +214,10 @@ const ARTICLES: Article[] = [
           items={[
             <>Open <B>Settings → Backup</B>.</>,
             <>Click <B>Restore</B> next to a backup, or <B>Restore from file…</B> to use a copy from elsewhere.</>,
-            <>WorshipFlow takes a safety backup of the current data first, restores, and restarts.</>
+            <>FaithCast takes a safety backup of the current data first, restores, and restarts.</>
           ]}
         />
-        <P>If WorshipFlow ever closes unexpectedly, it reopens with your data intact and offers to resume the presentation at the same slide. Unsaved edits to songs and slides are recovered too.</P>
+        <P>If FaithCast ever closes unexpectedly, it reopens with your data intact and offers to resume the presentation at the same slide. Unsaved edits to songs and slides are recovered too.</P>
       </>
     )
   },
@@ -220,10 +227,18 @@ const ARTICLES: Article[] = [
     body: () => (
       <>
         <P><B>The output appears on the wrong screen.</B> Click Identify, then choose the right display in the Live view's display menu.</P>
-        <P><B>The projector shows my desktop mirrored.</B> System Settings → Displays → set the projector to “Extended display”, not mirrored.</P>
-        <P><B>A video won't play.</B> The format isn't supported by macOS (e.g. AVI/WMV). Convert it to MP4 (H.264) with a free tool such as HandBrake.</P>
+        {IS_MAC ? (
+          <P><B>The projector shows my desktop mirrored.</B> System Settings → Displays → set the projector to “Extended display”, not mirrored.</P>
+        ) : (
+          <P><B>The projector shows my desktop duplicated.</B> Press <Kbd>Win+P</Kbd> and choose <B>Extend</B> (or Settings → System → Display → “Extend these displays”).</P>
+        )}
+        <P><B>A video won't play.</B> The format isn't supported (e.g. AVI/WMV). Convert it to MP4 (H.264) with a free tool such as HandBrake.</P>
         <P><B>Text is too small.</B> Reduce lines per slide, widen the theme's text area, or lower the text length. Auto-fit shrinks text only as far as the theme's minimum size.</P>
-        <P><B>“WorshipFlow cannot be opened because the developer cannot be verified.”</B> This development build isn't signed. Open System Settings → Privacy & Security and click “Open Anyway”.</P>
+        {IS_MAC ? (
+          <P><B>“FaithCast cannot be opened because the developer cannot be verified.”</B> This development build isn't signed. Open System Settings → Privacy & Security and click “Open Anyway”.</P>
+        ) : (
+          <P><B>“Windows protected your PC” when installing.</B> This development build isn't signed. Click <B>More info</B>, then <B>Run anyway</B>.</P>
+        )}
       </>
     )
   }
@@ -246,8 +261,8 @@ function ShortcutTable() {
           ))}
         </tbody>
       </table>
-      <P>Planner: <Kbd>↑</Kbd>/<Kbd>↓</Kbd> select items, <Kbd>⌥↑</Kbd>/<Kbd>⌥↓</Kbd> move, <Kbd>⌘D</Kbd> duplicate, <Kbd>⌫</Kbd> delete, <Kbd>Return</Kbd> edit. App: <Kbd>⌘N</Kbd> new service, <Kbd>⌘1</Kbd>–<Kbd>⌘7</Kbd> switch pages, <Kbd>⌘,</Kbd> settings. Bible page: <Kbd>⌥1</Kbd>–<Kbd>⌥9</Kbd> switch version.</P>
-      <P>Slide editor: arrows nudge (<Kbd>⇧</Kbd> for 10px), <Kbd>⌘Z</Kbd> undo, <Kbd>⇧⌘Z</Kbd> redo, <Kbd>⌘D</Kbd> duplicate, <Kbd>⌫</Kbd> delete, hold <Kbd>⌥</Kbd> while dragging to disable snapping.</P>
+      <P>Planner: <Kbd>↑</Kbd>/<Kbd>↓</Kbd> select items, <K c="Alt+ArrowUp" />/<K c="Alt+ArrowDown" /> move, <K c="Mod+KeyD" /> duplicate, <K c={IS_MAC ? 'Backspace' : 'Delete'} /> delete, <K c="Enter" /> edit. App: <K c="Mod+KeyN" /> new service, <K c="Mod+Digit1" />–<K c="Mod+Digit7" /> switch pages, <K c="Mod+Comma" /> settings{IS_MAC ? '' : <>, <Kbd>F1</Kbd> help</>}. Bible page: <K c="Alt+Digit1" />–<K c="Alt+Digit9" /> switch version.</P>
+      <P>Slide editor: arrows nudge (<K c="Shift" /> for 10px), <K c="Mod+KeyZ" /> undo, <K c={IS_MAC ? 'Mod+Shift+KeyZ' : 'Mod+KeyY'} /> redo, <K c="Mod+KeyD" /> duplicate, <K c={IS_MAC ? 'Backspace' : 'Delete'} /> delete, hold <K c="Alt" /> while dragging to disable snapping.</P>
     </>
   )
 }

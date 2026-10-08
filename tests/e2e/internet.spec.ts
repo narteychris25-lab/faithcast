@@ -62,13 +62,13 @@ test('Internet section: browse, show on screen, capture, import lyrics, save pic
   await expect(address).toHaveValue(/example\.com/)
 
   // Security: websites get no access to the app
-  const exposure = await inGuest<string>(app, 'example.com', '[typeof window.wf, typeof require, typeof process].join(",")')
+  const exposure = await inGuest<string>(app, 'example.com', '[typeof window.fc, typeof require, typeof process].join(",")')
   expect(exposure).toBe('undefined,undefined,undefined')
 
   // Capture to screen → picture on the projector
   await page.getByTestId('web-capture').click()
   const out = await output(app)
-  await expect(out.locator('img[src*="wfmedia://media"]').first()).toBeVisible({ timeout: 15_000 })
+  await expect(out.locator('img[src*="fcmedia://media"]').first()).toBeVisible({ timeout: 15_000 })
   await page.screenshot({ path: `${shots}/50-internet.png` })
 
   // Show the live page on screen → a second guest (in the output window) loads it
@@ -106,12 +106,12 @@ test('Internet section: browse, show on screen, capture, import lyrics, save pic
   await expect(page.getByLabel('Lyrics')).toHaveValue(/This domain is for use/)
 
   // Save a web picture into Media; refuse a link that isn't a picture
-  const saved = await page.evaluate(() => window.wf.invoke('web:saveMedia', { url: 'https://www.google.com/images/branding/googlelogo/2x/googlelogo_color_272x92dp.png', kind: 'image' }))
+  const saved = await page.evaluate(() => window.fc.invoke('web:saveMedia', { url: 'https://www.google.com/images/branding/googlelogo/2x/googlelogo_color_272x92dp.png', kind: 'image' }))
   expect(saved.type).toBe('image')
   expect(saved.folder).toBe('Web')
-  const refused = await page.evaluate(() => window.wf.invoke('web:saveMedia', { url: 'https://example.com/', kind: 'image' }).then(() => 'saved', (e: Error) => e.message))
+  const refused = await page.evaluate(() => window.fc.invoke('web:saveMedia', { url: 'https://example.com/', kind: 'image' }).then(() => 'saved', (e: Error) => e.message))
   expect(refused).toMatch(/not a downloadable image/)
-  const blocked = await page.evaluate(() => window.wf.invoke('web:saveMedia', { url: 'file:///etc/passwd', kind: 'image' }).then(() => 'saved', (e: Error) => e.message))
+  const blocked = await page.evaluate(() => window.fc.invoke('web:saveMedia', { url: 'file:///etc/passwd', kind: 'image' }).then(() => 'saved', (e: Error) => e.message))
   expect(blocked).toMatch(/Only files from web/)
   await app.close()
 })

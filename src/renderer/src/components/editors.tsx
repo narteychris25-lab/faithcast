@@ -8,8 +8,10 @@ import { useApp } from '@/stores/app'
 import { useContent, useMediaItem } from '@/stores/content'
 import { Button, ColorInput, Field, Input, Segmented, Select, Slider, Toggle } from './ui/controls'
 import { Modal, toast } from './ui/overlays'
+import { IS_MAC } from '@/lib/platform'
+import { fontStack } from './slide/FitText'
 
-export const FONTS = [
+const MAC_FONTS = [
   'Helvetica Neue',
   'Avenir Next',
   'Avenir',
@@ -39,6 +41,39 @@ export const FONTS = [
   'Menlo'
 ]
 
+/** Fonts that come with Windows 10/11 (plus Office's common ones). */
+const WINDOWS_FONTS = [
+  'Segoe UI',
+  'Segoe UI Semibold',
+  'Bahnschrift',
+  'Calibri',
+  'Candara',
+  'Century Gothic',
+  'Corbel',
+  'Franklin Gothic Medium',
+  'Gill Sans MT',
+  'Arial',
+  'Arial Black',
+  'Verdana',
+  'Tahoma',
+  'Trebuchet MS',
+  'Impact',
+  'Georgia',
+  'Cambria',
+  'Constantia',
+  'Palatino Linotype',
+  'Book Antiqua',
+  'Times New Roman',
+  'Sitka Heading',
+  'Gabriola',
+  'Rockwell',
+  'Ink Free',
+  'Comic Sans MS',
+  'Consolas'
+]
+
+export const FONTS = IS_MAC ? MAC_FONTS : WINDOWS_FONTS
+
 export function Section({ title, children, defaultOpen = true }: { title: string; children: ReactNode; defaultOpen?: boolean }) {
   const [open, setOpen] = useState(defaultOpen)
   return (
@@ -63,7 +98,7 @@ export function TextStyleEditor({ value, onChange, compact }: { value: TextStyle
       <Field label="Font">
         <Select value={FONTS.includes(value.fontFamily) ? value.fontFamily : '__custom'} onChange={(e) => e.target.value !== '__custom' && set('fontFamily', e.target.value)}>
           {FONTS.map((f) => (
-            <option key={f} value={f} style={{ fontFamily: f }}>
+            <option key={f} value={f} style={{ fontFamily: fontStack(f) }}>
               {f}
             </option>
           ))}

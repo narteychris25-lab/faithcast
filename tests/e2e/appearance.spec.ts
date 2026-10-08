@@ -14,7 +14,7 @@ test('light by default; appearance set in Settings applies everywhere, persists,
   expect(await theme()).toBe('light')
   await expect(page.getByTestId('theme-toggle')).toHaveCount(0)
   const bg = await page.evaluate(() => getComputedStyle(document.body).backgroundColor)
-  expect(bg).toBe('rgb(243, 244, 247)')
+  expect(bg).toBe('rgb(242, 245, 251)')
   await page.screenshot({ path: `${shots}/30-light-dashboard.png` })
 
   await page.locator('li').filter({ hasText: 'Sunday Service (Demo)' }).first().getByRole('button', { name: 'Open', exact: true }).click()
@@ -48,7 +48,7 @@ test('light by default; appearance set in Settings applies everywhere, persists,
   await expect(page.locator('#root').getByRole('radio', { name: 'Match macOS' })).toBeVisible()
   await page.locator('#root').getByRole('radio', { name: 'Dark', exact: true }).click()
   await expect.poll(theme).toBe('dark')
-  const savedAppearance = () => page.evaluate(() => window.wf.invoke('settings:get', undefined as never).then((s) => s.appearance))
+  const savedAppearance = () => page.evaluate(() => window.fc.invoke('settings:get', undefined as never).then((s) => s.appearance))
   expect(await savedAppearance()).toBe('dark')
   await page.getByRole('button', { name: 'Close output' }).click().catch(() => undefined)
   await app.close()

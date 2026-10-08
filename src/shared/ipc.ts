@@ -102,6 +102,10 @@ export interface IpcContract {
   'app:setUnsaved': [boolean, void]
   'app:loadDemo': [void, { serviceId: string | null }]
   'app:removeDemo': [void, { removed: number }]
+  /** Windows: colour and height of the caption-button overlay. */
+  'app:titleBar': [{ color: string; symbolColor: string; height: number }, void]
+  /** Windows: show the app menu (there is no menu bar) at a point in the window. */
+  'app:popupMenu': [{ x: number; y: number }, void]
 
   'dashboard:get': [void, DashboardData]
   'search:global': [string, SearchResult[]]
@@ -241,6 +245,8 @@ const CHANNELS: Record<IpcChannel, true> = {
   'app:setUnsaved': true,
   'app:loadDemo': true,
   'app:removeDemo': true,
+  'app:titleBar': true,
+  'app:popupMenu': true,
   'dashboard:get': true,
   'search:global': true,
   'church:get': true,
@@ -351,8 +357,8 @@ const EVENTS: Record<IpcEvent, true> = {
 export const IPC_CHANNELS = Object.keys(CHANNELS) as IpcChannel[]
 export const IPC_EVENTS = Object.keys(EVENTS) as IpcEvent[]
 
-/** Shape exposed on window.wf by the preload script. */
-export interface WfBridge {
+/** Shape exposed on window.fc by the preload script. */
+export interface FcBridge {
   invoke<C extends IpcChannel>(channel: C, arg: IpcArg<C>): Promise<IpcResult<C>>
   on<E extends IpcEvent>(event: E, cb: (payload: IpcEvents[E]) => void): () => void
   /** Absolute filesystem path of a dropped File (drag-and-drop import). */

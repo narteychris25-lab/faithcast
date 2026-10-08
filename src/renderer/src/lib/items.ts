@@ -115,4 +115,4 @@ export function itemSubtitle(item: ServiceItem, extra: { author?: string; transl
   }
 }
 
-export const DRAG_MIME = 'application/x-worshipflow-item'
+export const DRAG_MIME = 'application/x-faithcast-item'

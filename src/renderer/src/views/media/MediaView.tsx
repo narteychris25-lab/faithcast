@@ -10,6 +10,7 @@ import { useLive } from '@/stores/live'
 import { Badge, Button, EmptyState, Input, Segmented, Select } from '@/components/ui/controls'
 import { Modal, confirmDialog, openContextMenu, promptDialog, toast, type MenuEntry } from '@/components/ui/overlays'
 import { addToCurrentService, quickItem } from '@/views/songs/SongsView'
+import { OS } from '@/lib/platform'
 
 type Filter = 'all' | MediaType | 'favorites'
 const PAGE = 240
@@ -18,11 +19,13 @@ const ICONS = { image: ImageIcon, video: Film, audio: Music2 }
 /**
  * Fill in duration/dimensions (and a thumbnail if QuickLook couldn't make one)
  * by loading media metadata in the browser engine. Also detects files that
- * cannot be played on this Mac.
+ * cannot be played on this computer.
  */
 async function probe(m: MediaItem): Promise<void> {
   if (m.missing) return
-  if (m.type === 'image' && m.width) return
+  // Images: the main process can't decode every format on every OS (e.g. GIF/WebP/BMP on Windows),
+  // so the browser engine fills in the size and thumbnail it couldn't make.
+  if (m.type === 'image' && m.width && (m.hasThumbnail || /\.svg$/i.test(m.path))) return
   if (m.type !== 'image' && m.duration && (m.type === 'audio' || m.hasThumbnail)) return
   await new Promise<void>((resolve) => {
     const done = () => {
@@ -33,9 +36,19 @@ async function probe(m: MediaItem): Promise<void> {
     if (m.type === 'image') {
       const img = new Image()
       img.onload = () => {
-        void api('media:setMeta', { id: m.id, width: img.naturalWidth, height: img.naturalHeight })
-        done()
+        if (!m.width) void api('media:setMeta', { id: m.id, width: img.naturalWidth, height: img.naturalHeight })
+        if (m.hasThumbnail || /\.svg$/i.test(m.path) || !img.naturalWidth) return done()
+        const c = document.createElement('canvas')
+        c.width = Math.min(480, img.naturalWidth)
+        c.height = Math.max(1, Math.round((c.width * img.naturalHeight) / img.naturalWidth))
+        try {
+          c.getContext('2d')?.drawImage(img, 0, 0, c.width, c.height)
+          void api('media:saveThumbnail', { id: m.id, dataUrl: c.toDataURL('image/jpeg', 0.8) }).finally(done)
+        } catch {
+          done()
+        }
       }
+      img.crossOrigin = 'anonymous'
       img.onerror = done
       img.src = mediaUrl(m.id)
       return
@@ -80,7 +93,7 @@ async function probe(m: MediaItem): Promise<void> {
     }
     el.onseeked = capture
     el.onerror = () => {
-      toast.warning(`“${m.name}” can't be played on this Mac (unsupported format). Convert it to MP4 (H.264) to use it.`)
+      toast.warning(`“${m.name}” can't be played on this ${OS.computer} (unsupported format). Convert it to MP4 (H.264) to use it.`)
       done()
     }
     el.src = mediaUrl(m.id)
@@ -187,7 +200,7 @@ export function MediaView() {
         }
       },
       { label: m.missing ? 'Locate missing file…' : 'Replace file…', icon: Link2, onSelect: () => void api('media:relink', { id: m.id, path: null }).then((r) => r && toast.success('File relinked')).catch(toast.error) },
-      { label: 'Show in Finder', icon: FolderSearch, disabled: m.missing, onSelect: () => void api('app:showInFolder', m.path) },
+      { label: OS.showInFolder, icon: FolderSearch, disabled: m.missing, onSelect: () => void api('app:showInFolder', m.path) },
       'separator',
       { label: 'Remove from library', icon: Trash2, danger: true, onSelect: () => void remove(m) }
     ]
@@ -208,7 +221,7 @@ export function MediaView() {
       onDrop={(e) => {
         e.preventDefault()
         setDragOver(false)
-        const paths = [...e.dataTransfer.files].map((f) => window.wf.pathForFile(f)).filter(Boolean)
+        const paths = [...e.dataTransfer.files].map((f) => window.fc.pathForFile(f)).filter(Boolean)
         if (paths.length) void importPaths(paths)
       }}
     >
@@ -265,7 +278,7 @@ export function MediaView() {
       <div className={cx('relative min-h-0 flex-1 overflow-auto p-4', dragOver && 'bg-accent/10 outline-2 -outline-offset-8 outline-accent outline-dashed')}>
         {items.length === 0 ? (
           <EmptyState icon={ImageIcon} title={q ? 'No matching media' : 'Your media library is empty'} action={<Button variant="primary" icon={Upload} onClick={() => void importPaths(null)}>Import media</Button>}>
-            Import images, videos and audio, or drag files and folders from Finder onto this window. Files stay where they are on your Mac.
+            Import images, videos and audio, or drag files and folders from {OS.fileManager} onto this window. Files stay where they are on your {OS.computer}.
           </EmptyState>
         ) : (
           <>
@@ -281,7 +294,7 @@ export function MediaView() {
                     onKeyDown={(e) => e.key === 'Enter' && setPreview(m)}
                     onContextMenu={(e) => openContextMenu(e, menu(m))}
                     draggable
-                    onDragStart={(e) => e.dataTransfer.setData('application/x-worshipflow-item', JSON.stringify(mediaItemInput(m)))}
+                    onDragStart={(e) => e.dataTransfer.setData('application/x-faithcast-item', JSON.stringify(mediaItemInput(m)))}
                     className="group cursor-default overflow-hidden rounded-lg border border-line bg-panel [content-visibility:auto] hover:border-accent"
                   >
                     <div className="relative aspect-video bg-black">
@@ -309,7 +322,7 @@ export function MediaView() {
           </>
         )}
       </div>
-      <footer className="border-t border-line px-4 py-1.5 text-[11px] text-dim">{items.length} item{items.length === 1 ? '' : 's'} · drag files from Finder to import · right-click for options</footer>
+      <footer className="border-t border-line px-4 py-1.5 text-[11px] text-dim">{items.length} item{items.length === 1 ? '' : 's'} · drag files from {OS.fileManager} to import · right-click for options</footer>
       {preview && <MediaPreview item={preview} onClose={() => setPreview(null)} onPresent={present} />}
     </div>
   )

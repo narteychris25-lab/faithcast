@@ -3,7 +3,7 @@ import { join } from 'node:path'
 import { gunzipSync } from 'node:zlib'
 import type { BibleLibraryEntry, BibleTranslation } from '@shared/types'
 import type { Repos } from '../db/repos'
-import type { WfBibleFile } from '../db/repos/bible'
+import type { FcBibleFile } from '../db/repos/bible'
 import { paths } from '../paths'
 
 /**
@@ -37,7 +37,7 @@ export function listBibleLibrary(repos: Repos): BibleLibraryEntry[] {
 
 export function installLibraryBible(repos: Repos, abbreviation: string): BibleTranslation {
   const entry = manifest().find((e) => e.abbreviation === abbreviation)
-  if (!entry || !/^[\w-]+\.wfbible\.json\.gz$/.test(entry.file)) throw new Error('That Bible is not in the library')
-  const data = JSON.parse(gunzipSync(readFileSync(entryPath(entry))).toString('utf8')) as WfBibleFile
+  if (!entry || !/^[\w-]+\.fcbible\.json\.gz$/.test(entry.file)) throw new Error('That Bible is not in the library')
+  const data = JSON.parse(gunzipSync(readFileSync(entryPath(entry))).toString('utf8')) as FcBibleFile
   return repos.bible.importTranslation(data, !!entry.core)
 }

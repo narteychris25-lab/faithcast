@@ -1,4 +1,4 @@
-// Builds the optional Bible library bundled with WorshipFlow from the
+// Builds the optional Bible library bundled with FaithCast from the
 // thiagobodruk/bible repository (JSON files). Only versions marked
 // public-domain or openly licensed AND "bundled" in src/shared/bible-catalog.json
 // are converted — copyrighted versions are never bundled. English only.
@@ -6,7 +6,7 @@
 // so they can be reinstalled from the Bibles page after being removed.
 //
 // Usage: node scripts/build-bible-library.mjs <dir-with-json-files>
-// Output: resources/bibles/library/<ABBR>.wfbible.json.gz + catalog.json
+// Output: resources/bibles/library/<ABBR>.fcbible.json.gz + catalog.json
 import { mkdirSync, readFileSync, writeFileSync, existsSync } from 'node:fs'
 import { join } from 'node:path'
 import { gunzipSync, gzipSync } from 'node:zlib'
@@ -37,7 +37,7 @@ const countVerses = (books) => books.reduce((n, b) => n + b.chapters.reduce((m, 
 
 const manifest = []
 for (const [abbreviation, status] of [['KJV', 'public-domain'], ['BSB', 'public-domain']]) {
-  const file = `${abbreviation}.wfbible.json.gz`
+  const file = `${abbreviation}.fcbible.json.gz`
   const d = JSON.parse(gunzipSync(readFileSync(join(root, 'resources/bibles', file))).toString('utf8'))
   manifest.push({ code: abbreviation.toLowerCase(), abbreviation, name: d.name, language: 'English', license: d.license, status, file, verses: countVerses(d.books), books: d.books.length, core: true })
 }
@@ -56,8 +56,8 @@ for (const entry of catalog.filter((e) => e.bundled && e.language === 'English')
     return { number, chapters: b.chapters.map((c) => c.map(clean)) }
   })
   const verses = countVerses(out)
-  const data = { format: 'worshipflow-bible', version: 1, abbreviation: entry.abbreviation, name: entry.name, language: entry.langCode, license: entry.license, books: out }
-  const name = `${entry.abbreviation}.wfbible.json.gz`
+  const data = { format: 'faithcast-bible', version: 1, abbreviation: entry.abbreviation, name: entry.name, language: entry.langCode, license: entry.license, books: out }
+  const name = `${entry.abbreviation}.fcbible.json.gz`
   writeFileSync(join(outDir, name), gzipSync(JSON.stringify(data), { level: 9 }))
   manifest.push({ code: entry.code, abbreviation: entry.abbreviation, name: entry.name, language: entry.language, license: entry.license, status: entry.status, file: name, verses, books: out.length })
   console.log(entry.abbreviation.padEnd(8), String(verses).padStart(6), 'verses', entry.name)

@@ -61,7 +61,7 @@ export const useApp = create<AppState>((set, get) => ({
     ])
     let currentServiceId: string | null = null
     try {
-      currentServiceId = localStorage.getItem('wf.currentService')
+      currentServiceId = localStorage.getItem('fc.currentService')
     } catch {
       /* storage unavailable */
     }
@@ -74,7 +74,7 @@ export const useApp = create<AppState>((set, get) => ({
 
   openService(id, view = 'planner') {
     try {
-      localStorage.setItem('wf.currentService', id)
+      localStorage.setItem('fc.currentService', id)
     } catch {
       /* ignore */
     }

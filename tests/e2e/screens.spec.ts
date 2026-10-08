@@ -34,7 +34,7 @@ test('every screen performs real work', async () => {
   const verse = page.getByLabel('Verse', { exact: true })
   const clearBook = async () => {
     await book.click()
-    await page.keyboard.press('Meta+a')
+    await page.keyboard.press('ControlOrMeta+a')
     await page.keyboard.press('Backspace')
   }
   await book.click()
@@ -75,7 +75,7 @@ test('every screen performs real work', async () => {
 
   // Backspace in an empty box steps back; ↑/↓ choose another book; Backspace drops the suggestion
   await verse.click()
-  await page.keyboard.press('Meta+a')
+  await page.keyboard.press('ControlOrMeta+a')
   await page.keyboard.press('Backspace')
   await page.keyboard.press('Backspace')
   await expect(chapter).toBeFocused()
@@ -95,7 +95,7 @@ test('every screen performs real work', async () => {
   await expect(page.getByText('Demo — motion loop')).toBeVisible()
   await page.waitForTimeout(6000)
   await page.screenshot({ path: `${shots}/13-media.png` })
-  await expect.poll(async () => page.locator('img[src*="wfmedia://thumb"]').count(), { timeout: 20_000 }).toBeGreaterThanOrEqual(4)
+  await expect.poll(async () => page.locator('img[src*="fcmedia://thumb"]').count(), { timeout: 20_000 }).toBeGreaterThanOrEqual(4)
   await page.screenshot({ path: `${shots}/13-media.png` })
 
   // Themes: edit a built-in theme directly, then reset it; duplicating still works
@@ -137,7 +137,7 @@ test('every screen performs real work', async () => {
   await page.screenshot({ path: `${shots}/17-settings-displays.png` })
 
   // Global search
-  await page.keyboard.press('Meta+KeyK')
+  await page.keyboard.press('ControlOrMeta+KeyK')
   await page.getByPlaceholder(/Search songs, lyrics/).fill('john 3:16')
   await expect(page.getByRole('dialog', { name: 'Search' }).getByText('John 3:16').first()).toBeVisible()
   // No focus ring drawn around the search box (it spilled past the dialog's edges)
@@ -148,7 +148,7 @@ test('every screen performs real work', async () => {
   await expect(page.getByTestId('verse-16')).toBeVisible()
   await expect(page.getByRole('button', { name: /Present John 3:16/ })).toBeVisible()
   // …also when already on the Bible page, and a whole chapter just opens that chapter
-  await page.keyboard.press('Meta+KeyK')
+  await page.keyboard.press('ControlOrMeta+KeyK')
   await page.getByPlaceholder(/Search songs, lyrics/).fill('john 10')
   await page.getByRole('dialog', { name: 'Search' }).getByText('John 10:1-42').click()
   await expect(page.getByTestId('verse-1')).toContainText('He that entereth not by the door into the sheepfold')

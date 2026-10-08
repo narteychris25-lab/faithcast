@@ -1,4 +1,5 @@
 import type { AppSettings, ShortcutAction } from '@shared/types'
+import { IS_MAC } from './platform'
 
 interface KeyLike {
   code: string
@@ -12,21 +13,31 @@ interface KeyLike {
   shift?: boolean
 }
 
-/** Canonical combo string, e.g. "Meta+Shift+KeyK", "ArrowRight". */
+/**
+ * Canonical combo string, e.g. "Mod+Shift+KeyK", "ArrowRight". "Mod" is the
+ * platform's primary modifier (⌘ on macOS, Ctrl on Windows), so bindings
+ * carry over between the two; "Ctrl" (macOS) and "Win" (Windows) are the other key.
+ */
 export function eventCombo(e: KeyLike): string {
+  const meta = e.metaKey || e.meta
+  const ctrl = e.ctrlKey || e.ctrl
   const mods: string[] = []
-  if (e.metaKey || e.meta) mods.push('Meta')
-  if (e.ctrlKey || e.ctrl) mods.push('Ctrl')
+  if (IS_MAC ? meta : ctrl) mods.push('Mod')
+  if (IS_MAC && ctrl) mods.push('Ctrl')
+  if (!IS_MAC && meta) mods.push('Win')
   if (e.altKey || e.alt) mods.push('Alt')
   if (e.shiftKey || e.shift) mods.push('Shift')
   return [...mods, e.code].join('+')
 }
 
+/** Bindings saved before "Mod" existed used "Meta" (⌘). */
+const normalize = (combo: string) => combo.replace(/(^|\+)Meta(?=\+)/, '$1Mod')
+
 export function matchAction(e: KeyLike, shortcuts: AppSettings['shortcuts']): ShortcutAction | null {
   if (['MetaLeft', 'MetaRight', 'ShiftLeft', 'ShiftRight', 'AltLeft', 'AltRight', 'ControlLeft', 'ControlRight'].includes(e.code)) return null
   const combo = eventCombo(e)
   for (const [action, combos] of Object.entries(shortcuts) as [ShortcutAction, string[]][]) {
-    if (combos.includes(combo)) return action
+    if (combos.some((c) => normalize(c) === combo)) return action
   }
   return null
 }
@@ -38,24 +49,22 @@ const NAMES: Record<string, string> = {
   ArrowDown: '↓',
   Space: 'Space',
   Escape: 'Esc',
-  Enter: 'Return',
   PageUp: 'Page Up',
   PageDown: 'Page Down',
   Period: '.',
   Comma: ',',
   Slash: '/',
-  Backspace: '⌫',
-  Meta: '⌘',
-  Ctrl: '⌃',
-  Alt: '⌥',
-  Shift: '⇧'
+  ...(IS_MAC
+    ? { Enter: 'Return', Backspace: '⌫', Mod: '⌘', Ctrl: '⌃', Alt: '⌥', Shift: '⇧' }
+    : { Enter: 'Enter', Backspace: 'Backspace', Delete: 'Del', Mod: 'Ctrl', Win: 'Win', Alt: 'Alt', Shift: 'Shift' })
 }
 
+/** Display form: "⇧⌘K" on macOS, "Ctrl+Shift+K" on Windows. */
 export function comboLabel(combo: string): string {
-  return combo
+  return normalize(combo)
     .split('+')
     .map((p) => NAMES[p] ?? p.replace(/^Key/, '').replace(/^Digit/, ''))
-    .join('')
+    .join(IS_MAC ? '' : '+')
 }
 
 /** True when keyboard focus is in a text field, where live shortcuts must not fire. */

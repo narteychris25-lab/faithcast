@@ -6,7 +6,7 @@ import { gunzipSync } from 'node:zlib'
 import { openDatabase, type DB } from '../../src/main/db/connection'
 import { LATEST_VERSION } from '../../src/main/db/migrations'
 import { createRepos, type Repos } from '../../src/main/db/repos'
-import type { WfBibleFile } from '../../src/main/db/repos/bible'
+import type { FcBibleFile } from '../../src/main/db/repos/bible'
 import { parseLyrics } from '../../src/shared/lyrics'
 
 let dir: string
@@ -14,7 +14,7 @@ let db: DB
 let repos: Repos
 
 beforeEach(() => {
-  dir = mkdtempSync(join(tmpdir(), 'wf-db-'))
+  dir = mkdtempSync(join(tmpdir(), 'fc-db-'))
   db = openDatabase(join(dir, 'test.db')).db
   repos = createRepos(db)
   repos.themes.ensureBuiltins()
@@ -163,7 +163,7 @@ describe('media', () => {
 
 describe('bible', () => {
   it('imports the bundled KJV and queries passages, search and structure', () => {
-    const file = JSON.parse(gunzipSync(readFileSync('resources/bibles/KJV.wfbible.json.gz')).toString()) as WfBibleFile
+    const file = JSON.parse(gunzipSync(readFileSync('resources/bibles/KJV.fcbible.json.gz')).toString()) as FcBibleFile
     const t0 = Date.now()
     const tr = repos.bible.importTranslation(file, true)
     expect(Date.now() - t0).toBeLessThan(20000)
@@ -207,7 +207,7 @@ describe('large libraries', () => {
 
 describe('scripture schedule', () => {
   it('adds, orders, removes and clears scheduled passages', () => {
-    const tr = repos.bible.importTranslation({ format: 'worshipflow-bible', version: 1, abbreviation: 'TST', name: 'Test', books: [{ number: 43, chapters: [[], [], Array.from({ length: 20 }, (_, i) => `v${i + 1}`)] }] })
+    const tr = repos.bible.importTranslation({ format: 'faithcast-bible', version: 1, abbreviation: 'TST', name: 'Test', books: [{ number: 43, chapters: [[], [], Array.from({ length: 20 }, (_, i) => `v${i + 1}`)] }] })
     const a = repos.bible.addToSchedule({ translationId: tr.id, book: 43, chapter: 3, verseStart: 16, verseEnd: 18 }, 1)
     const b = repos.bible.addToSchedule({ translationId: tr.id, book: 43, chapter: 3, verseStart: 1, verseEnd: 3 }, 2)
     expect(a.label).toBe('John 3:16-18 (TST)')
@@ -222,7 +222,7 @@ describe('scripture schedule', () => {
   })
 
   it('reports what uses a translation, and removing it clears its schedule entries', () => {
-    const tr = repos.bible.importTranslation({ format: 'worshipflow-bible', version: 1, abbreviation: 'TST', name: 'Test', books: [{ number: 43, chapters: [[], [], ['a', 'b']] }] })
+    const tr = repos.bible.importTranslation({ format: 'faithcast-bible', version: 1, abbreviation: 'TST', name: 'Test', books: [{ number: 43, chapters: [[], [], ['a', 'b']] }] })
     const ref = { translationId: tr.id, book: 43, chapter: 3, verseStart: 1, verseEnd: 2 }
     repos.bible.addToSchedule(ref, 1)
     const svc = repos.services.create({ name: 'Sunday', date: '2026-10-04' })

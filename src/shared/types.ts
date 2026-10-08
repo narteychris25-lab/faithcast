@@ -402,7 +402,7 @@ export type RenderSlideKind = 'text' | 'media' | 'custom' | 'announcement' | 'we
 /**
  * A fully resolved slide: everything the output window needs to draw it,
  * with no further database lookups. Media are referenced by id and loaded
- * through the wfmedia:// protocol.
+ * through the fcmedia:// protocol.
  */
 export interface RenderSlide {
   key: string

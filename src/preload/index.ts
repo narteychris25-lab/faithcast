@@ -1,5 +1,5 @@
 import { contextBridge, ipcRenderer, webUtils } from 'electron'
-import { IPC_CHANNELS, IPC_EVENTS, type WfBridge } from '../shared/ipc'
+import { IPC_CHANNELS, IPC_EVENTS, type FcBridge } from '../shared/ipc'
 
 /**
  * The only bridge between web content and the main process. Channels and
@@ -11,7 +11,7 @@ const events = new Set<string>(IPC_EVENTS)
 
 type Envelope = { ok: true; value: unknown } | { ok: false; error: string }
 
-const bridge: WfBridge = {
+const bridge: FcBridge = {
   async invoke(channel, arg) {
     if (!channels.has(channel)) throw new Error(`Blocked IPC channel: ${channel}`)
     const res = (await ipcRenderer.invoke(channel, arg)) as Envelope
@@ -28,4 +28,4 @@ const bridge: WfBridge = {
   platform: process.platform
 }
 
-contextBridge.exposeInMainWorld('wf', bridge)
+contextBridge.exposeInMainWorld('fc', bridge)

@@ -3,9 +3,12 @@ import { basename, join } from 'node:path'
 import Database from 'better-sqlite3'
 import type { BackupInfo } from '@shared/types'
 import type { DB } from './db/connection'
+import { BRAND } from '@shared/brand'
 import { paths } from './paths'
 
-const PREFIX = 'worshipflow-'
+const PREFIX = `${BRAND.slug}-`
+/** Backups made before the rename (copied over with the old data folder) */
+const LEGACY_PREFIX = `${BRAND.legacy.slug}-`
 const EXT = '.db'
 
 function stamp(d = new Date()): string {
@@ -13,14 +16,14 @@ function stamp(d = new Date()): string {
 }
 
 function reasonOf(name: string): string {
-  const m = /^worshipflow-[\d_-]+-(\w+)\.db$/.exec(name)
+  const m = /^[a-z]+-[\d_-]+-(\w+)\.db$/.exec(name)
   return m ? m[1] : 'manual'
 }
 
 export function listBackups(): BackupInfo[] {
   const dir = paths.backups()
   return readdirSync(dir)
-    .filter((f) => f.startsWith(PREFIX) && f.endsWith(EXT))
+    .filter((f) => (f.startsWith(PREFIX) || f.startsWith(LEGACY_PREFIX)) && f.endsWith(EXT))
     .map((f) => {
       const file = join(dir, f)
       const st = statSync(file)
@@ -53,7 +56,7 @@ export function pruneBackups(keep: number): void {
   }
 }
 
-/** Validate that a file is a WorshipFlow database before restoring it. */
+/** Validate that a file is a FaithCast database before restoring it. */
 export function validateBackup(file: string): void {
   if (!existsSync(file)) throw new Error('Backup file not found')
   let probe: Database.Database | null = null
@@ -64,10 +67,10 @@ export function validateBackup(file: string): void {
     const tables = probe.prepare("SELECT name FROM sqlite_master WHERE type='table'").all() as { name: string }[]
     const names = new Set(tables.map((t) => t.name))
     for (const t of ['services', 'songs', 'themes', 'settings']) {
-      if (!names.has(t)) throw new Error('This file is not a WorshipFlow backup')
+      if (!names.has(t)) throw new Error('This file is not a FaithCast backup')
     }
   } catch (e) {
-    if (e instanceof Error && /not a database|file is not/i.test(e.message)) throw new Error('This file is not a WorshipFlow backup')
+    if (e instanceof Error && /not a database|file is not/i.test(e.message)) throw new Error('This file is not a FaithCast backup')
     throw e
   } finally {
     probe?.close()

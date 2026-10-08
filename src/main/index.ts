@@ -5,7 +5,8 @@ import type { AppSettings, LiveState, RecoveryInfo } from '@shared/types'
 import { BRAND } from '@shared/brand'
 import { openDatabase, type DB } from './db/connection'
 import { createRepos, type Repos } from './db/repos'
-import { removeDemo, seedBibles, seedDemo } from './db/seed'
+import { relinkDemoMedia, removeDemo, seedBibles, seedDemo } from './db/seed'
+import { migrateLegacyData } from './legacy'
 import { paths } from './paths'
 import { log } from './log'
 import { createBackupSync, pruneBackups, replaceDatabaseFile } from './backup'
@@ -24,10 +25,14 @@ import type { AppContext } from './context'
 process.on('uncaughtException', (e) => log.error('uncaughtException', e))
 process.on('unhandledRejection', (e) => log.error('unhandledRejection', e))
 
-if (process.env.WORSHIPFLOW_DATA_DIR) app.setPath('userData', process.env.WORSHIPFLOW_DATA_DIR)
+if (process.env.FAITHCAST_DATA_DIR) app.setPath('userData', process.env.FAITHCAST_DATA_DIR)
 // `npm run dev` gets its own data folder, so it runs alongside the installed app and never touches the church's real data
 else if (!app.isPackaged) app.setPath('userData', join(app.getPath('appData'), `${BRAND.name} Dev`))
 app.setName(BRAND.name)
+// First launch after the rename: bring over the old data folder (tests use their own folder)
+if (!process.env.FAITHCAST_DATA_DIR) migrateLegacyData(app.getPath('userData'))
+// Windows groups taskbar buttons and notifications by this ID; it must match appId in electron-builder.yml.
+if (process.platform === 'win32') app.setAppUserModelId(BRAND.appId)
 registerMediaScheme()
 
 if (!app.requestSingleInstanceLock()) {
@@ -89,6 +94,7 @@ function initDatabase(): void {
   if (opened.applied.length) log.info('migrations applied', opened.applied)
   repos.themes.ensureBuiltins()
   seedBibles(repos)
+  relinkDemoMedia(repos)
 
   // Crash detection: the flag is cleared only on a clean quit.
   crashedLastRun = repos.settings.getState('session.running', false)
@@ -112,7 +118,7 @@ function initDatabase(): void {
 function applyAppearance(s: AppSettings): void {
   const mode = s.appearance
   nativeTheme.themeSource = mode === 'light' || mode === 'dark' ? mode : 'system'
-  operatorWin?.setBackgroundColor(nativeTheme.shouldUseDarkColors ? '#0b0d12' : '#f3f4f7')
+  operatorWin?.setBackgroundColor(nativeTheme.shouldUseDarkColors ? '#070b16' : '#f2f5fb')
 }
 
 function recovery(): RecoveryInfo {
@@ -151,9 +157,17 @@ function createOperatorWindow(): void {
     minHeight: 680,
     show: false,
     title: BRAND.name,
-    backgroundColor: nativeTheme.shouldUseDarkColors ? '#0b0d12' : '#f3f4f7',
-    titleBarStyle: 'hiddenInset',
-    trafficLightPosition: { x: 14, y: 14 },
+    // Packaged builds take the icon from the app bundle / .exe; `npm run dev` would show Electron's
+    ...(!app.isPackaged && process.platform !== 'darwin' ? { icon: join(app.getAppPath(), 'build', 'icon.ico') } : {}),
+    backgroundColor: nativeTheme.shouldUseDarkColors ? '#070b16' : '#f2f5fb',
+    // macOS: traffic lights inset into the header. Windows: native caption buttons drawn over
+    // the header (the renderer keeps their colours in step with the appearance via app:titleBar).
+    ...(process.platform === 'darwin'
+      ? { titleBarStyle: 'hiddenInset' as const, trafficLightPosition: { x: 14, y: 14 } }
+      : {
+          titleBarStyle: 'hidden' as const,
+          titleBarOverlay: nativeTheme.shouldUseDarkColors ? { color: '#0d1220', symbolColor: '#e8ecf6', height: 44 } : { color: '#ffffff', symbolColor: '#0b1533', height: 44 }
+        }),
     webPreferences: { preload: PRELOAD, sandbox: true, contextIsolation: true, nodeIntegration: false, spellcheck: true, webviewTag: true }
   })
   hardenWindow(operatorWin)
@@ -212,6 +226,7 @@ app.whenReady().then(() => {
   }
 
   applyAppearance(repos.settings.get())
+  if (!app.isPackaged && process.platform === 'darwin') app.dock?.setIcon(join(app.getAppPath(), 'build', 'icon.png'))
   setupWebSandbox()
 
   handleMediaProtocol(repos.media.pathOf, (id) => {

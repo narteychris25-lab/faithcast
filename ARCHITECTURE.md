@@ -4,13 +4,13 @@
 
 | Layer | Choice | Reason |
 |---|---|---|
-| Shell | Electron 44 | Chromium provides hardware-accelerated H.264/HEVC/VP9 playback on macOS, a reliable multi-window model, and `screen` APIs with hot-plug events. One codebase covers Intel and Apple Silicon. |
+| Shell | Electron 44 | Chromium provides hardware-accelerated H.264/HEVC/VP9 playback on macOS and Windows, a reliable multi-window model, and `screen` APIs with hot-plug events. One codebase covers macOS (Intel and Apple Silicon) and Windows (x64). |
 | UI | React 19, TypeScript, Tailwind 4 | Fast, typed, component-based UI; zustand for state; dnd-kit for sorting. |
 | Data | SQLite via better-sqlite3 13 | Synchronous, transactional, crash-safe (WAL + `synchronous=FULL`), FTS5 full-text search, built-in online backup. It ships Node-API prebuilds, so there is no native compilation. |
 | Validation | zod | Every IPC argument and every imported file is validated in the main process. |
-| Packaging | electron-builder | `.app` + `.dmg`, x64 and arm64. |
+| Packaging | electron-builder | macOS: `.app` + `.dmg`, x64 and arm64. Windows: NSIS installer, x64. |
 
-FFmpeg is deliberately **not** used. Thumbnails come from macOS QuickLook (`nativeImage.createThumbnailFromPath`), or from a frame captured in the renderer for formats QuickLook can't read. Playback uses Chromium's decoders, so no extra software is needed.
+FFmpeg is deliberately **not** used. Thumbnails come from macOS QuickLook or the Windows shell (`nativeImage.createThumbnailFromPath`), or from a frame captured in the renderer for formats the OS can't read. Playback uses Chromium's decoders, so no extra software is needed.
 
 ## Processes
 
@@ -19,12 +19,12 @@ FFmpeg is deliberately **not** used. Thumbnails come from macOS QuickLook (`nati
 │ db/        SQLite connection, migrations, repositories, seed         │
 │ ipc/       allow-listed, zod-validated handlers                      │
 │ windows/   operator window, OutputManager, display detection         │
-│ media/     wfmedia:// protocol (range requests), importer, thumbs    │
+│ media/     fcmedia:// protocol (range requests), importer, thumbs    │
 │ io/        songs / themes / bible / service-package import-export    │
 │ backup.ts  VACUUM INTO backups, validate, restore                    │
 │ index.ts   lifecycle, crash flag, live snapshot, menu                │
 └───────────▲──────────────────────────────────────────▲──────────────┘
-            │ window.wf (preload, contextBridge)        │
+            │ window.fc (preload, contextBridge)        │
 ┌───────────┴───────────┐                   ┌───────────┴───────────┐
 │ Operator renderer     │  live:update ──►   │ Output renderer       │
 │ (planner, live brain) │  ◄── video status  │ (audience, no chrome) │
@@ -50,7 +50,7 @@ The output uses two `TransitionStack`s:
 
 `windows/output.ts` (OutputManager) handles the audience window:
 
-- **Target display selected (not the operator's screen):** a frameless window at the display's bounds, `alwaysOnTop('screen-saver')`, visible on all Spaces, with `backgroundThrottling: false`. Optionally uses native macOS fullscreen instead.
+- **Target display selected (not the operator's screen):** a frameless window at the display's bounds, `alwaysOnTop('screen-saver')`, visible on all Spaces (macOS), with `backgroundThrottling: false`. Optionally uses native OS fullscreen instead.
 - **No second display:** a resizable 16:9 preview window.
 - **Display removed:** the output falls back to a preview window. The requested display is remembered, and output is restored when that display is reconnected.
 - **Resilience:** a `powerSaveBlocker` prevents display sleep while output is open. If the output renderer crashes, it reloads automatically.
@@ -60,7 +60,7 @@ The output uses two `TransitionStack`s:
 - `contextIsolation`, `sandbox: true`, no `nodeIntegration`. The preload exposes only allow-listed channels.
 - Handlers verify that the sender frame is our own file:// (or dev-server) page, and validate all input with zod.
 - Strict CSP (no remote scripts). Navigation is blocked, and external links open in the system browser (http/https/mailto only).
-- `wfmedia://` serves only media registered in the database, by id. Arbitrary paths can never be requested.
+- `fcmedia://` serves only media registered in the database, by id. Arbitrary paths can never be requested.
 - Imported files have size limits, schema validation and zip-entry filtering. React escapes all text, and no user HTML is ever rendered.
 - Export destinations are chosen through native save dialogs in the main process.
 

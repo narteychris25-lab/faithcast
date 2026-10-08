@@ -2,17 +2,19 @@
 
 ## Location
 
-`~/Library/Application Support/WorshipFlow/`
+`~/Library/Application Support/FaithCast/` on macOS, `%APPDATA%\FaithCast\` on Windows
 
 | Path | Contents |
 |---|---|
-| `worshipflow.db` (+ `-wal`, `-shm`) | The SQLite database |
-| `backups/` | `worshipflow-<timestamp>-<reason>.db` (reason: auto, manual, premigration, prerestore) |
+| `faithcast.db` (+ `-wal`, `-shm`) | The SQLite database |
+| `backups/` | `faithcast-<timestamp>-<reason>.db` (reason: auto, manual, premigration, prerestore) |
 | `thumbnails/` | Cached JPEG thumbnails, named `<mediaId>.jpg` |
 | `library/` | Media extracted from imported service packages or themes, and converted HEIC/TIFF images |
 | `logs/main.log` | Rotating log (about 2 MB, with one previous file kept) |
 
-Set `WORSHIPFLOW_DATA_DIR` to use a different folder. The automated tests use this.
+Set `FAITHCAST_DATA_DIR` to use a different folder. The automated tests use this.
+
+**Upgrading from WorshipFlow** (the app's previous name): on the first launch, FaithCast copies the `WorshipFlow` folder here, renames `worshipflow.db` to `faithcast.db` and re-points media paths that were inside the old folder. The old folder is not changed. Old `worshipflow-*.db` backups appear in the backup list and can be restored.
 
 ## Integrity settings
 
@@ -56,13 +58,13 @@ To add a migration, append `{ version: 2, name: '…', up: (db) => db.exec('ALTE
 - **Automatic**: once per day at startup (if there is content), and before migrations. Only the newest *N* automatic backups are kept (Settings → Backup); manual backups are never pruned.
 - **Manual**: Settings → Backup → **Back up now**, or File → Back Up Now.
 - Backups are produced with `VACUUM INTO`, so they are consistent even while the app is writing.
-- Media files are *not* inside the database backup. Back up your media folders separately, for example with Time Machine.
+- Media files are *not* inside the database backup. Back up your media folders separately, for example with Time Machine (macOS) or File History (Windows).
 
 ## Restore
 
 Settings → Backup → **Restore** (or **Restore from file…**):
 
-1. The file is opened read-only, checked with `quick_check`, and confirmed to contain WorshipFlow tables.
+1. The file is opened read-only, checked with `quick_check`, and confirmed to contain FaithCast tables.
 2. A `prerestore` backup of the current data is taken.
 3. The output closes and the database closes.
 4. The backup is copied next to the database and atomically renamed over it, and the WAL files are removed.
@@ -76,11 +78,11 @@ Settings → Backup → **Restore** (or **Restore from file…**):
 
 ## File formats
 
-All are UTF-8 JSON unless noted, and include `format` and `version` fields so future versions can migrate them.
+All are UTF-8 JSON unless noted, and include `format` and `version` fields so future versions can migrate them. Files made before the rename, with `worshipflow-…` formats (and `.wfbible` Bibles), are still accepted.
 
 ### `.song`
 ```json
-{ "format": "worshipflow-song", "version": 1,
+{ "format": "faithcast-song", "version": 1,
   "songs": [{ "title": "…", "author": "…", "copyright": "…", "ccli": "…", "category": "…", "tags": [],
               "notes": "", "sections": [{ "type": "verse", "label": "Verse 1", "text": "line\nline" }],
               "arrangement": [0, 1, 0] }] }
@@ -89,19 +91,19 @@ All are UTF-8 JSON unless noted, and include `format` and `version` fields so fu
 
 ### `.theme`
 ```json
-{ "format": "worshipflow-theme", "version": 1, "name": "…", "settings": { /* ThemeSettings */ },
+{ "format": "faithcast-theme", "version": 1, "name": "…", "settings": { /* ThemeSettings */ },
   "backgroundImage": { "name": "bg.jpg", "data": "<base64>" } }
 ```
 
 ### `.churchservice` (ZIP)
-- `manifest.json`: `{ format: "worshipflow-service", version: 1, service, items, songs: [{id, song}], themes, media: [{id, name, type, originalPath, file}], translations: [{id, abbreviation}] }`
+- `manifest.json`: `{ format: "faithcast-service", version: 1, service, items, songs: [{id, song}], themes, media: [{id, name, type, originalPath, file}], translations: [{id, abbreviation}] }`
 - `media/<id>.<ext>`: optional embedded media, stored without compression.
 
 On import, ids are remapped. Songs are matched by title and author, themes by name, and translations by abbreviation. Embedded media is extracted to `library/`. Media that isn't embedded is linked by its original path, or marked missing.
 
-### Bible (`.wfbible` / `.json`, optionally gzipped)
+### Bible (`.fcbible` / `.json`, optionally gzipped)
 ```json
-{ "format": "worshipflow-bible", "version": 1, "abbreviation": "KJV", "name": "…", "language": "en",
+{ "format": "faithcast-bible", "version": 1, "abbreviation": "KJV", "name": "…", "language": "en",
   "license": "…", "books": [{ "number": 1, "chapters": [["verse 1 text", "verse 2 text"]] }] }
 ```
 Also accepted:

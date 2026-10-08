@@ -1,22 +1,38 @@
 import { existsSync, readdirSync, readFileSync, statSync } from 'node:fs'
-import { join } from 'node:path'
+import { basename, join } from 'node:path'
 import { gunzipSync } from 'node:zlib'
 import { DEFAULT_BACKGROUND, DEFAULT_MEDIA_SETTINGS } from '@shared/defaults'
 import { parseLyrics } from '@shared/lyrics'
 import type { Repos } from './repos'
-import type { WfBibleFile } from './repos/bible'
+import type { FcBibleFile } from './repos/bible'
 import { paths } from '../paths'
 import { log } from '../log'
 
 /** Install bundled public-domain Bibles once. */
+/**
+ * Demo media lives inside the app bundle, so its stored paths break when the
+ * app moves or is renamed (e.g. WorshipFlow.app → FaithCast.app). Point any
+ * missing demo file back at this copy of the app's resources.
+ */
+export function relinkDemoMedia(repos: Repos): void {
+  const demoDir = join(paths.resources(), 'demo')
+  const rows = repos.db.prepare('SELECT id, path FROM media WHERE demo = 1').all() as { id: string; path: string }[]
+  const update = repos.db.prepare('UPDATE OR IGNORE media SET path = ?, missing = 0 WHERE id = ?')
+  for (const r of rows) {
+    if (existsSync(r.path)) continue
+    const here = join(demoDir, basename(r.path))
+    if (here !== r.path && existsSync(here)) update.run(here, r.id)
+  }
+}
+
 export function seedBibles(repos: Repos): void {
   if (repos.settings.getState('biblesSeeded', false)) return
   const dir = join(paths.resources(), 'bibles')
   if (!existsSync(dir)) return
   const t0 = Date.now()
-  for (const f of readdirSync(dir).filter((x) => x.endsWith('.wfbible.json.gz')).sort()) {
+  for (const f of readdirSync(dir).filter((x) => x.endsWith('.fcbible.json.gz')).sort()) {
     try {
-      const data = JSON.parse(gunzipSync(readFileSync(join(dir, f))).toString('utf8')) as WfBibleFile
+      const data = JSON.parse(gunzipSync(readFileSync(join(dir, f))).toString('utf8')) as FcBibleFile
       if (!repos.bible.hasTranslation(data.abbreviation)) repos.bible.importTranslation(data, true)
     } catch (e) {
       log.error('bible seed failed', f, e)

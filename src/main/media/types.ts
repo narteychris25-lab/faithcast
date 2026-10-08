@@ -7,7 +7,7 @@ export const MEDIA_EXTENSIONS: Record<MediaType, string[]> = {
   audio: ['mp3', 'm4a', 'aac', 'wav', 'ogg', 'oga', 'opus', 'flac', 'aif', 'aiff', 'weba']
 }
 
-/** Images Chromium cannot draw directly; converted to JPEG at import via macOS ImageIO. */
+/** Images Chromium cannot draw directly; converted to JPEG at import via macOS ImageIO (not available on Windows). */
 export const CONVERT_IMAGE_EXTENSIONS = ['heic', 'heif', 'tif', 'tiff']
 
 const MIME: Record<string, string> = {

@@ -1,4 +1,4 @@
-# WorshipFlow user guide
+# FaithCast user guide
 
 This guide is for the volunteer running presentation on a Sunday. Everything described here also appears in the app under **Help**.
 
@@ -16,7 +16,7 @@ You can change all of these later in **Settings**. To run the wizard again, go t
 
 The pages (Dashboard, Bible, Songs, Themes, Service Planner, Live, Media, Internet) are in the bar along the top of the window, with **Settings** and **Help** at its right end. On a narrow window the bar shows icons only; point at one to see its name.
 
-**Light or dark?** WorshipFlow starts in Light. To change it, choose Dark, Light or Match macOS in **Settings → General → Appearance**. This changes only your control screen; the projector always shows your slide themes. Dark is easier on the eyes in a dim sanctuary.
+**Light or dark?** FaithCast starts in Light. To change it, choose Dark, Light or Match macOS (Match Windows on a PC) in **Settings → General → Appearance**. This changes only your control screen; the projector always shows your slide themes. Dark is easier on the eyes in a dim sanctuary.
 
 ## 2. Plan a service
 
@@ -24,9 +24,9 @@ The pages (Dashboard, Bible, Songs, Themes, Service Planner, Live, Media, Intern
 2. In the **Service Planner**, use the left panel to add content:
    - **Song**: search your library, then double-click or drag a song into the service.
    - **Bible**: type `John 3:16-18` and press Return.
-   - **Image / Video / Audio**: pick from the library, or drop files from Finder straight into the list.
+   - **Image / Video / Audio**: pick from the library, or drop files from Finder (File Explorer on Windows) straight into the list.
    - **Announcement, Slides, Sermon, Offering, Prayer, Section, Other**: click to add.
-3. Drag the handle (⋮⋮) to reorder, or use ⌥↑ / ⌥↓.
+3. Drag the handle (⋮⋮) to reorder, or use ⌥↑ / ⌥↓ (Alt+↑ / Alt+↓ on Windows).
 4. Right-click an item for **Rename, Duplicate, Hide, Lock, Move up/down, Delete**.
 5. Select an item to edit it on the right: its text, song arrangement for this service, Bible verses per slide, media options (loop, volume, fade), theme, background and transition.
 6. **Service settings** (top right) sets the theme and background for the whole service.
@@ -49,7 +49,7 @@ That saved a wretch like me
 - A blank line inside a section starts a new slide. Long sections split automatically.
 - **Arrangement** sets the order sections are shown in (e.g. V1 C V2 C) without retyping them.
 - **Import** accepts .song, plain text or CCLI SongSelect .txt, JSON, and OpenLyrics .xml.
-- ⌘-click several songs, then right-click to export them.
+- ⌘-click (Ctrl-click on Windows) several songs, then right-click to export them.
 - Enter copyright and CCLI details; they appear on the first slide (configurable in Settings → General).
 
 ## 4. Bible
@@ -57,7 +57,7 @@ That saved a wretch like me
 - **Type the reference, EasyWorship-style:** there are three boxes, **Book**, **Chapter** and **Verse**. Start typing a book and it completes automatically. `jo` suggests **Joshua**, `joh` gives **John**, `ps` gives **Psalms**, and `1 co` gives **1 Corinthians**. Press Space, or just type the chapter number, to accept the book and move to the Chapter box. Type `:` or Space to move to the Verse box (a single verse like `16`, or a range like `16-18`), then press **Return** to open it. Typing `joh3:16-18` fills **John · 3 · 16-18**. On the Bible page the passage also opens as you type. Backspace in an empty box goes back to the previous one.
   - ↑ / ↓ choose a different suggested book, Backspace removes the suggestion, Esc closes the list.
   - The same box is used when adding a Bible passage in the planner, and when editing a Bible item's reference.
-- **Switch versions in one click:** the version buttons (**KJV**, **NKJV**, **ESV**…) sit under the Bible heading. You can also press ⌥1 for the first version, ⌥2 for the second, and so on. If a verse from the chapter you're viewing is on screen, it changes to the new version straight away, and → still continues to the next verse. The Bible page remembers the version you used last. Choosing **Make default** in Settings → Bibles resets it to that version. The planner's Bible panel has the same buttons.
+- **Switch versions in one click:** the version buttons (**KJV**, **NKJV**, **ESV**…) sit under the Bible heading. You can also press ⌥1 (Alt+1 on Windows) for the first version, ⌥2 for the second, and so on. If a verse from the chapter you're viewing is on screen, it changes to the new version straight away, and → still continues to the next verse. The Bible page remembers the version you used last. Choosing **Make default** in Settings → Bibles resets it to that version. The planner's Bible panel has the same buttons.
 - **Click a verse to present it immediately.** With **Present on click** switched on (above the verses, on by default), clicking a verse puts it on screen. Press → for the next verse, or Shift-click another verse to present a range. The verse on screen is marked **LIVE**, and a small live monitor with Next, Black and Clear appears on the right, so you can stay on the Bible page. Switch it off when you only want to prepare without going live.
 - **Managing Bible versions:** go to **Settings → Bibles** (or click **Versions** on the Bible page).
   - **Installed** lists your versions. Click **Make default** to choose the version the Bible page and planner open with. Click **Remove** to delete a version; you're told first if any service items or scheduled passages use it. You can't remove your last version.
@@ -69,8 +69,8 @@ That saved a wretch like me
 
 ## 5. Media
 
-- Media → **Import**, or drag files or folders onto the window. Files stay where they are on your Mac.
-- Right-click an item to add it to the service, present it, favourite it, rename it, tag it, move it to a folder, locate it if missing, or show it in Finder.
+- Media → **Import**, or drag files or folders onto the window. Files stay where they are on your computer.
+- Right-click an item to add it to the service, present it, favourite it, rename it, tag it, move it to a folder, locate it if missing, or show it in Finder / File Explorer.
 - If a file is moved, it's marked **Media file unavailable**. The service still runs; that slide simply shows nothing. Use **Locate missing file…** to fix it.
 
 ## 5b. Internet: lyrics, YouTube and pictures
@@ -95,8 +95,8 @@ Web pages run in a sealed sandbox with no access to your files, database, camera
 ## 7. Connecting a projector or TV
 
 1. Connect it with HDMI or a USB-C adapter and switch it on.
-2. If your Mac mirrors its screen, go to **System Settings → Displays** and choose **Extended display**.
-3. WorshipFlow detects the display and asks **Present on this display?** Click yes.
+2. If your computer mirrors its screen: on a Mac, go to **System Settings → Displays** and choose **Extended display**; on Windows, press **Win+P** and choose **Extend**.
+3. FaithCast detects the display and asks **Present on this display?** Click yes.
 4. Not sure which screen is which? Click **Identify** in the Live view.
 
 If the cable comes out mid-service, the output moves to a preview window. Reconnect the display and output returns to it automatically.
@@ -116,18 +116,18 @@ If the cable comes out mid-service, the output moves to a preview window. Reconn
 7. Audio items play without changing the picture. A purple indicator shows audio is playing, with volume, loop and stop controls.
 8. **Exit** (Esc) ends the presentation.
 
-**Quick Presentation**: present a song, verse, image, video or announcement from the Dashboard, the Songs page, the Bible page or ⌘K search, without adding it to a service.
+**Quick Presentation**: present a song, verse, image, video or announcement from the Dashboard, the Songs page, the Bible page or ⌘K search (Ctrl+K on Windows), without adding it to a service.
 
 ## 9. Backups and safety
 
 - A backup is made automatically every day. For an extra copy, go to **Settings → Backup → Back up now**, then **Open backups folder** and copy the file to a USB drive.
 - **Restore** returns everything to a backup (a safety copy is taken first) and restarts the app.
-- If WorshipFlow ever closes unexpectedly, reopen it and click **Resume presentation** to go straight back to the same slide.
-- To move a service to another computer, use the planner's ⋯ menu → **Export package** (include media), then **Import service** on the other Mac.
+- If FaithCast ever closes unexpectedly, reopen it and click **Resume presentation** to go straight back to the same slide.
+- To move a service to another computer, use the planner's ⋯ menu → **Export package** (include media), then **Import service** on the other computer (Mac or Windows).
 
 ## 10. Tips for Sunday
 
-- Keep the Mac on power. WorshipFlow stops the display from sleeping while output is open.
+- Keep the computer on power. FaithCast stops the display from sleeping while output is open.
 - Test the projector and your videos before the service starts.
 - Turn on Do Not Disturb so notifications can't appear.
 - Lock finished items (right-click → Lock) so they can't be changed by accident.

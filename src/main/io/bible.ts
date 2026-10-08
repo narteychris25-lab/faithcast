@@ -2,8 +2,8 @@ import { readFileSync, statSync } from 'node:fs'
 import { basename, extname } from 'node:path'
 import { gunzipSync } from 'node:zlib'
 import { findBook } from '@shared/bible-books'
-import type { WfBibleFile } from '../db/repos/bible'
-import { parse, WfBibleSchema } from '../validation'
+import type { FcBibleFile } from '../db/repos/bible'
+import { parse, FcBibleSchema } from '../validation'
 import catalog from '@shared/bible-catalog.json'
 
 export interface CatalogEntry {
@@ -24,7 +24,7 @@ export const BIBLE_CATALOG = catalog as CatalogEntry[]
 const TB_CODES = 'gn ex lv nm dt js jz rt 1sm 2sm 1rs 2rs 1cr 2cr ed ne et jó sl pv ec ct is jr lm ez dn os jl am ob jn mq na hc sf ag zc ml mt mc lc jo atos rm 1co 2co gl ef fp cl 1ts 2ts 1tm 2tm tt fm hb tg 1pe 2pe 1jo 2jo 3jo jd ap'.split(' ')
 
 export interface BibleFileResult {
-  bible: WfBibleFile
+  bible: FcBibleFile
   /** Catalogue entry when the file is a recognised thiagobodruk/bible version. */
   entry?: CatalogEntry
 }
@@ -33,7 +33,7 @@ const MAX_FILE = 80 * 1024 * 1024
 
 /**
  * Reads a Bible the user is licensed to use. Supported formats:
- *  - .wfbible / .json (optionally gzipped) — WorshipFlow format (see DATABASE.md)
+ *  - .fcbible / .json (optionally gzipped) — FaithCast format (see DATABASE.md); .wfbible from before the rename
  *  - .json / .xml from github.com/thiagobodruk/bible (e.g. en_asv.json, en_asv.xml)
  *  - .xml — Zefania XML (<XMLBIBLE><BIBLEBOOK bnumber><CHAPTER cnumber><VERS vnumber>)
  *  - .csv — rows of: book,chapter,verse,text (book as number 1–66 or name)
@@ -43,7 +43,7 @@ export function readBibleFileDetailed(file: string): BibleFileResult {
   const entry = BIBLE_CATALOG.find((e) => e.code === code)
   const text = readText(file)
   const trimmed = text.trimStart()
-  let bible: WfBibleFile
+  let bible: FcBibleFile
   if (trimmed.startsWith('[')) bible = parseThiagoJson(JSON.parse(text), file, entry)
   else if (trimmed.startsWith('<') && /<bible[\s>]/i.test(text.slice(0, 2000)) && !/<XMLBIBLE/i.test(text.slice(0, 2000))) bible = parseThiagoXml(text, file, entry)
   else return { bible: readBibleFile(file) }
@@ -57,8 +57,8 @@ function readText(file: string): string {
   return buf.toString('utf8').replace(/^\uFEFF/, '')
 }
 
-function validate(result: WfBibleFile): WfBibleFile {
-  const valid = parse(WfBibleSchema, result, 'Bible file') as WfBibleFile
+function validate(result: FcBibleFile): FcBibleFile {
+  const valid = parse(FcBibleSchema, result, 'Bible file') as FcBibleFile
   const verses = valid.books.reduce((n, b) => n + b.chapters.reduce((m, c) => m + c.filter(Boolean).length, 0), 0)
   if (verses < 1) throw new Error('No verses found')
   return valid
@@ -80,7 +80,7 @@ function tbMeta(file: string, entry?: CatalogEntry) {
 }
 
 /** thiagobodruk/bible JSON: [{ abbrev, name, chapters: string[][] }, …] */
-function parseThiagoJson(data: unknown, file: string, entry?: CatalogEntry): WfBibleFile {
+function parseThiagoJson(data: unknown, file: string, entry?: CatalogEntry): FcBibleFile {
   if (!Array.isArray(data) || !data.every((b) => b && Array.isArray(b.chapters))) throw new Error('Unrecognised Bible JSON')
   const books = data.map((b: { abbrev?: string; chapters: unknown[][] }, i: number) => {
     // All 66 present → canonical order; otherwise identify each book by its code.
@@ -88,11 +88,11 @@ function parseThiagoJson(data: unknown, file: string, entry?: CatalogEntry): WfB
     if (!number) throw new Error(`Unknown book code "${b.abbrev}"`)
     return { number, chapters: b.chapters.map((c) => (Array.isArray(c) ? c.map(cleanVerse) : [])) }
   })
-  return { format: 'worshipflow-bible', version: 1, ...tbMeta(file, entry), books }
+  return { format: 'faithcast-bible', version: 1, ...tbMeta(file, entry), books }
 }
 
 /** thiagobodruk/bible XML: <bible><b id="gn" n="…"><c n="1"><v n="1">text</v>… */
-function parseThiagoXml(xml: string, file: string, entry?: CatalogEntry): WfBibleFile {
+function parseThiagoXml(xml: string, file: string, entry?: CatalogEntry): FcBibleFile {
   const bookBlocks = [...xml.matchAll(/<b\b([^>]*)>([\s\S]*?)<\/b>/gi)]
   if (!bookBlocks.length) throw new Error('Unrecognised Bible XML')
   const books = new Map<number, string[][]>()
@@ -109,19 +109,19 @@ function parseThiagoXml(xml: string, file: string, entry?: CatalogEntry): WfBibl
   return finish(books, tbMeta(file, entry).name, tbMeta(file, entry).abbreviation, tbMeta(file, entry).language, tbMeta(file, entry).license)
 }
 
-export function readBibleFile(file: string): WfBibleFile {
+export function readBibleFile(file: string): FcBibleFile {
   if (statSync(file).size > MAX_FILE) throw new Error('File is too large')
   let buf = readFileSync(file)
   if (buf[0] === 0x1f && buf[1] === 0x8b) buf = gunzipSync(buf)
   const text = buf.toString('utf8').replace(/^﻿/, '')
   const ext = extname(file.replace(/\.gz$/i, '')).toLowerCase()
-  const fallbackName = basename(file).replace(/\.(wfbible|json|xml|csv)(\.gz)?$/i, '')
+  const fallbackName = basename(file).replace(/\.(fcbible|wfbible|json|xml|csv)(\.gz)?$/i, '')
 
-  let result: WfBibleFile
+  let result: FcBibleFile
   if (ext === '.xml' || text.trimStart().startsWith('<')) result = parseZefania(text, fallbackName)
   else if (ext === '.csv') result = parseCsv(text, fallbackName)
-  else result = JSON.parse(text) as WfBibleFile
-  const valid = parse(WfBibleSchema, result, 'Bible file') as WfBibleFile
+  else result = JSON.parse(text) as FcBibleFile
+  const valid = parse(FcBibleSchema, result, 'Bible file') as FcBibleFile
   const verses = valid.books.reduce((n, b) => n + b.chapters.reduce((m, c) => m + c.length, 0), 0)
   if (verses < 1) throw new Error('No verses found')
   return valid
@@ -141,9 +141,9 @@ function put(books: Map<number, string[][]>, book: number, chapter: number, vers
   books.set(book, chapters)
 }
 
-function finish(books: Map<number, string[][]>, name: string, abbreviation: string, language = 'en', license = ''): WfBibleFile {
+function finish(books: Map<number, string[][]>, name: string, abbreviation: string, language = 'en', license = ''): FcBibleFile {
   return {
-    format: 'worshipflow-bible',
+    format: 'faithcast-bible',
     version: 1,
     abbreviation,
     name,
@@ -167,7 +167,7 @@ const unescape = (s: string) =>
     .replace(/&apos;/g, "'")
     .replace(/&amp;/g, '&')
 
-export function parseZefania(xml: string, fallbackName: string): WfBibleFile {
+export function parseZefania(xml: string, fallbackName: string): FcBibleFile {
   if (!/<XMLBIBLE/i.test(xml)) throw new Error('Unrecognised XML Bible format (expected Zefania XML)')
   const name = unescape(/<title>([\s\S]*?)<\/title>/i.exec(xml)?.[1] ?? /biblename="([^"]+)"/i.exec(xml)?.[1] ?? fallbackName).trim()
   const ident = unescape(/<identifier>([\s\S]*?)<\/identifier>/i.exec(xml)?.[1] ?? '').trim()
@@ -218,7 +218,7 @@ function csvRows(text: string): string[][] {
   return rows
 }
 
-export function parseCsv(text: string, fallbackName: string): WfBibleFile {
+export function parseCsv(text: string, fallbackName: string): FcBibleFile {
   const books = new Map<number, string[][]>()
   for (const r of csvRows(text)) {
     if (r.length < 4) continue

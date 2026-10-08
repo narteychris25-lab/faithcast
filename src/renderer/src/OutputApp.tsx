@@ -118,7 +118,7 @@ function LiveWebPage({ url, box, visible, paused }: { url: string; box: React.CS
       ref={ref as never}
       src={url}
       partition="persist:web"
-      httpreferrer="https://worshipflow.app/"
+      httpreferrer="https://faithcast.app/"
       style={{ position: 'absolute', ...box, background: '#000', visibility: visible ? 'visible' : 'hidden' }}
     />
   )

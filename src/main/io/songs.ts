@@ -4,14 +4,15 @@ import type { Song, SongSection } from '@shared/types'
 import { newId, parseLyrics, serializeLyrics } from '@shared/lyrics'
 import type { SongInput } from '@shared/ipc'
 import { parse, SectionSchema, z } from '../validation'
+import { BRAND } from '@shared/brand'
 
 /**
  * .song file format (JSON, UTF-8):
- * { "format": "worshipflow-song", "version": 1,
+ * { "format": "faithcast-song", "version": 1,
  *   "songs": [{ title, author, copyright, ccli, category, tags, notes,
  *               sections: [{ type, label, text }], arrangement: [sectionIndex...] }] }
  */
-export const SONG_FORMAT = 'worshipflow-song'
+export const SONG_FORMAT = 'faithcast-song'
 const MAX_FILE = 10 * 1024 * 1024
 
 const PortableSong = z.object({
@@ -25,7 +26,7 @@ const PortableSong = z.object({
   sections: z.array(SectionSchema.omit({ id: true })).max(200),
   arrangement: z.array(z.number().int().min(0)).max(500).default([])
 })
-const SongFile = z.object({ format: z.literal(SONG_FORMAT), version: z.literal(1), songs: z.array(PortableSong).max(20000) })
+const SongFile = z.object({ format: z.enum([SONG_FORMAT, `${BRAND.legacy.slug}-song`]), version: z.literal(1), songs: z.array(PortableSong).max(20000) })
 
 type Portable = z.infer<typeof PortableSong>
 

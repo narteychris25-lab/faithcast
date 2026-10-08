@@ -1,8 +1,8 @@
-import type { WfBridge } from '../shared/ipc'
+import type { FcBridge } from '../shared/ipc'
 
 declare global {
   interface Window {
-    wf: WfBridge
+    fc: FcBridge
   }
 }
 

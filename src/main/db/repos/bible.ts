@@ -3,9 +3,9 @@ import { formatReference } from '@shared/bible-books'
 import { bool, now, type DB } from '../connection'
 import { ftsQuery } from './fts'
 
-/** WorshipFlow's documented Bible exchange format (also used for bundled Bibles). */
-export interface WfBibleFile {
-  format: 'worshipflow-bible'
+/** FaithCast's documented Bible exchange format (also used for bundled Bibles). */
+export interface FcBibleFile {
+  format: 'faithcast-bible'
   version: 1
   abbreviation: string
   name: string
@@ -73,7 +73,7 @@ export function createBibleRepo(db: DB) {
     },
 
     /** Import a whole translation in one transaction. Throws on invalid structure. */
-    importTranslation(file: WfBibleFile, builtin = false, id: string = crypto.randomUUID()): BibleTranslation {
+    importTranslation(file: FcBibleFile, builtin = false, id: string = crypto.randomUUID()): BibleTranslation {
       const abbrev = file.abbreviation.trim().toUpperCase()
       if (repo.hasTranslation(abbrev)) throw new Error(`A translation with abbreviation "${abbrev}" is already installed.`)
       const insV = db.prepare('INSERT INTO bible_verses (translation_id, book, chapter, verse, text) VALUES (?, ?, ?, ?, ?)')

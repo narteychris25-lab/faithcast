@@ -1,10 +1,13 @@
-# macOS packaging. To rename the app, change appId/productName here,
-# name/productName in package.json and src/shared/brand.ts.
-appId: com.worshipflow.app
-productName: WorshipFlow
-copyright: Copyright © 2026 WorshipFlow
+# macOS and Windows packaging. To rename the app, change appId/productName here,
+# name/productName in package.json and src/shared/brand.ts (appId too).
+#   npm run dist:mac → release/FaithCast-<version>-<arch>.dmg
+#   npm run dist:win → release/FaithCast-Setup-<version>.exe (builds on macOS too)
+appId: com.faithcast.app
+productName: FaithCast
+copyright: Copyright © 2026 FaithCast
 directories:
   output: release
+  # App icons: build/icon.icns (macOS), build/icon.ico (Windows), made from brand/faithcast-mark.png
   buildResources: build
 files:
   - out/**
@@ -16,11 +19,15 @@ extraResources:
     filter: ["**/*"]
 asarUnpack:
   - node_modules/better-sqlite3/**
-# better-sqlite3 ships Node-API prebuilds; no native rebuild needed.
+# better-sqlite3 ships Node-API prebuilds for every OS (incl. win32-x64); no native rebuild needed,
+# so the Windows build can be made on a Mac.
 npmRebuild: false
+# No auto-update server: don't publish to GitHub releases or write app-update.yml
+publish: null
 electronVersion: 44.4.5
 mac:
   category: public.app-category.productivity
+  icon: build/icon.icns
   target:
     - target: dmg
       arch: [x64, arm64]
@@ -33,15 +40,36 @@ mac:
     NSHighResolutionCapable: true
     LSMinimumSystemVersion: "11.0"
 dmg:
-  title: WorshipFlow
-  artifactName: WorshipFlow-${version}-${arch}.dmg
+  title: FaithCast
+  artifactName: FaithCast-${version}-${arch}.dmg
+win:
+  icon: build/icon.ico
+  target:
+    - target: nsis
+      arch: [x64]
+  # Unsigned: Windows SmartScreen shows "Windows protected your PC" (More info → Run anyway).
+  # Add a code-signing certificate to distribute widely.
+  signAndEditExecutable: true
+nsis:
+  artifactName: FaithCast-Setup-${version}.${ext}
+  # Classic installer: per-user by default (no admin prompt), folder can be changed
+  oneClick: false
+  perMachine: false
+  allowToChangeInstallationDirectory: true
+  createDesktopShortcut: true
+  createStartMenuShortcut: true
+  shortcutName: FaithCast
+  installerIcon: build/icon.ico
+  uninstallerIcon: build/icon.ico
+  # Keep the church's data (songs, services, backups in %APPDATA%\FaithCast) when uninstalling
+  deleteAppDataOnUninstall: false
 fileAssociations:
   - ext: churchservice
-    name: WorshipFlow Service
+    name: FaithCast Service
     role: Editor
   - ext: song
-    name: WorshipFlow Song
+    name: FaithCast Song
     role: Editor
   - ext: theme
-    name: WorshipFlow Theme
+    name: FaithCast Theme
     role: Editor

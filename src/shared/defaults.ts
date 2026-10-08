@@ -212,7 +212,7 @@ export const DEFAULT_SHORTCUTS: AppSettings['shortcuts'] = {
   logo: ['KeyL'],
   pause: ['KeyK'],
   exit: ['Escape'],
-  search: ['Meta+KeyK', 'Meta+KeyF']
+  search: ['Mod+KeyK', 'Mod+KeyF']
 }
 
 export const SHORTCUT_LABELS: Record<keyof AppSettings['shortcuts'], string> = {

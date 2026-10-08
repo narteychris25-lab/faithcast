@@ -1,21 +1,26 @@
 @import 'tailwindcss';
 
 /*
- * Operator UI design tokens. Dark by default; "high contrast" raises
- * text/border contrast for dim booths and low-vision operators.
+ * Operator UI design tokens, from the FaithCast logo: brand blue #0B6CF5
+ * fading to deep blue #002B8D, wordmark navy #0B1533. Dark mode is tinted
+ * navy. "High contrast" raises text/border contrast for dim booths and
+ * low-vision operators.
  */
 @theme {
-  --color-bg: #0b0d12;
-  --color-panel: #11141b;
-  --color-panel-2: #161a23;
-  --color-panel-3: #1d2230;
-  --color-line: #252b3a;
-  --color-line-strong: #343c50;
-  --color-fg: #e7e9ef;
-  --color-muted: #8d95a8;
-  --color-dim: #5f6679;
-  --color-accent: #6d6af5;
-  --color-accent-strong: #5652e8;
+  --color-bg: #070b16;
+  --color-panel: #0d1220;
+  --color-panel-2: #121929;
+  --color-panel-3: #1a2238;
+  --color-line: #222c45;
+  --color-line-strong: #323e5f;
+  --color-fg: #e8ecf6;
+  --color-muted: #8d97b2;
+  --color-dim: #5e6987;
+  --color-accent: #2a74f5;
+  --color-accent-strong: #1a5fe0;
+  --color-brand: #0b6cf5;
+  --color-brand-deep: #002b8d;
+  --color-brand-ink: #0b1533;
   --color-live: #ef4444;
   --color-next: #f59e0b;
   --color-ok: #22c55e;
@@ -26,8 +31,8 @@
   --color-star: #facc15;
   --color-stage: #07080b;
 
-  --font-sans: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Helvetica Neue', Helvetica, Arial, sans-serif;
-  --font-mono: 'SF Mono', Menlo, monospace;
+  --font-sans: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Segoe UI', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  --font-mono: 'SF Mono', Menlo, Consolas, 'Cascadia Mono', monospace;
 }
 
 /*
@@ -36,17 +41,17 @@
  */
 :root[data-theme='light'] {
   color-scheme: light;
-  --color-bg: #f3f4f7;
+  --color-bg: #f2f5fb;
   --color-panel: #ffffff;
-  --color-panel-2: #f6f7f9;
-  --color-panel-3: #eceef3;
-  --color-line: #dde1e8;
-  --color-line-strong: #c3c9d5;
-  --color-fg: #151821;
-  --color-muted: #555c6e;
-  --color-dim: #858b9b;
-  --color-accent: #5652e8;
-  --color-accent-strong: #453fd6;
+  --color-panel-2: #f5f7fc;
+  --color-panel-3: #e9eef8;
+  --color-line: #dbe2ef;
+  --color-line-strong: #c0cadf;
+  --color-fg: #0b1533;
+  --color-muted: #4e5977;
+  --color-dim: #8590ac;
+  --color-accent: #0a5fe0;
+  --color-accent-strong: #0849b8;
   --color-live: #dc2626;
   --color-next: #b45309;
   --color-ok: #15803d;
@@ -84,7 +89,7 @@
   --color-fg: #000000;
   --color-muted: #1f1f1f;
   --color-dim: #404040;
-  --color-accent: #3b36c9;
+  --color-accent: #0645b0;
 }
 
 :root[data-theme='dark'][data-contrast='high'] {
@@ -97,7 +102,7 @@
   --color-fg: #ffffff;
   --color-muted: #d0d0d0;
   --color-dim: #a8a8a8;
-  --color-accent: #8f8cff;
+  --color-accent: #6aa8ff;
 }
 
 html,
@@ -152,12 +157,22 @@ select,
   background: transparent;
 }
 
-/* Title bar drag region (hiddenInset window) */
+/* Title bar drag region (hiddenInset window on macOS, title bar overlay on Windows) */
 .drag {
   -webkit-app-region: drag;
 }
 .no-drag {
   -webkit-app-region: no-drag;
+}
+/* Room for the window buttons: traffic lights on the left (macOS), caption buttons on the right (Windows).
+   Divided by the UI scale so the gap stays the buttons' real width when the interface is zoomed. */
+.titlebar {
+  padding-left: calc(80px / var(--ui-zoom, 1));
+}
+:root[data-platform='win32'] .titlebar,
+:root[data-platform='linux'] .titlebar {
+  padding-left: 6px;
+  padding-right: calc(144px / var(--ui-zoom, 1));
 }
 
 .checker {
@@ -168,7 +183,7 @@ select,
   background-position: 0 0, 0 8px, 8px -8px, -8px 0;
 }
 
-@keyframes wf-fade-in {
+@keyframes fc-fade-in {
   from {
     opacity: 0;
   }
@@ -176,7 +191,7 @@ select,
     opacity: 1;
   }
 }
-@keyframes wf-pop {
+@keyframes fc-pop {
   from {
     opacity: 0;
     transform: translateY(4px) scale(0.98);
@@ -187,13 +202,13 @@ select,
   }
 }
 .animate-pop {
-  animation: wf-pop 120ms ease-out;
+  animation: fc-pop 120ms ease-out;
 }
 .animate-fade {
-  animation: wf-fade-in 150ms ease-out;
+  animation: fc-fade-in 150ms ease-out;
 }
 
-@keyframes wf-pulse-live {
+@keyframes fc-pulse-live {
   0%,
   100% {
     opacity: 1;
@@ -203,7 +218,7 @@ select,
   }
 }
 .live-dot {
-  animation: wf-pulse-live 1.6s ease-in-out infinite;
+  animation: fc-pulse-live 1.6s ease-in-out infinite;
 }
 
 /* Applied for one frame while switching light/dark so colours swap instantly. */

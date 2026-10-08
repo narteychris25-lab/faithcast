@@ -83,13 +83,14 @@ export async function importMedia(repos: Repos, input: string[], folder = ''): P
 
 function convertImage(file: string): string {
   const img = nativeImage.createFromPath(file)
-  if (img.isEmpty()) throw new Error('Unsupported image format')
+  // macOS decodes HEIC/TIFF through ImageIO; Windows has no built-in decoder Electron can use.
+  if (img.isEmpty()) throw new Error(process.platform === 'darwin' ? 'Unsupported image format' : 'This format can only be imported on a Mac — save it as JPEG or PNG first')
   const out = join(paths.library(), `${basename(file, extname(file))}-${Date.now()}.jpg`)
   writeFileSync(out, img.toJPEG(92))
   return out
 }
 
-/** Thumbnail via macOS QuickLook (handles images and most videos without FFmpeg). */
+/** Thumbnail via macOS QuickLook / the Windows shell (handles images and most videos without FFmpeg). */
 export async function makeThumbnail(repos: Repos, item: MediaItem): Promise<boolean> {
   if (item.type === 'audio') return false
   const out = join(paths.thumbnails(), `${item.id}.jpg`)
@@ -102,8 +103,9 @@ export async function makeThumbnail(repos: Repos, item: MediaItem): Promise<bool
         if (width > 480) img = img.resize({ width: 480, quality: 'good' })
       }
     } else {
-      // QuickLook decodes MP4/MOV; for other formats it returns a generic file
-      // icon, so let the renderer capture a real frame instead.
+      // QuickLook / the Windows shell decode MP4/MOV; for other formats they return
+      // a generic file icon, so let the renderer capture a real frame instead.
+      // Images they can't decode (e.g. GIF/WebP on Windows) also fall back to the renderer.
       if (!['.mp4', '.m4v', '.mov'].includes(extname(item.path).toLowerCase())) return false
       img = await nativeImage.createThumbnailFromPath(item.path, { width: 480, height: 480 })
     }

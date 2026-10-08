@@ -8,6 +8,8 @@ import { useApp } from '@/stores/app'
 import { Button, Field, Input, Segmented, Toggle } from '@/components/ui/controls'
 import { toast } from '@/components/ui/overlays'
 import { SlidePreview } from '@/components/slide/SlideCanvas'
+import { OS } from '@/lib/platform'
+import { Logo } from '@/components/Logo'
 
 const STEPS = ['Church name', 'Church logo', 'Displays', 'Default theme', 'First service']
 
@@ -44,7 +46,7 @@ export function SetupWizard() {
       await app.saveSettings({ setupComplete: true })
       if (openId) useApp.setState({ currentServiceId: openId })
       try {
-        if (openId) localStorage.setItem('wf.currentService', openId)
+        if (openId) localStorage.setItem('fc.currentService', openId)
       } catch {
         /* ignore */
       }
@@ -66,6 +68,7 @@ export function SetupWizard() {
     <div className="drag flex h-full items-center justify-center bg-gradient-to-br from-accent/15 to-bg p-8">
       <div className="no-drag flex max-h-full w-full max-w-3xl flex-col overflow-hidden rounded-2xl border border-line-strong bg-panel shadow-2xl">
         <div className="border-b border-line px-8 pt-7 pb-5">
+          <Logo size={34} className="mb-3" />
           <div className="text-[12px] font-bold tracking-widest text-accent uppercase">Welcome to {BRAND.name}</div>
           <div className="mt-3 flex gap-2">
             {STEPS.map((s, i) => (
@@ -107,8 +110,8 @@ export function SetupWizard() {
               <h2 className="mb-1 text-lg font-semibold">Your displays</h2>
               <p className="mb-4 text-[13px] text-muted">
                 {app.displays.length > 1
-                  ? 'A second display is connected. The audience output will use it automatically; your Mac screen keeps the operator view.'
-                  : 'Only this screen is connected. The output will open in a preview window until you connect a projector or TV — WorshipFlow will detect it and offer to switch.'}
+                  ? `A second display is connected. The audience output will use it automatically; your ${OS.computer} screen keeps the operator view.`
+                  : 'Only this screen is connected. The output will open in a preview window until you connect a projector or TV — FaithCast will detect it and offer to switch.'}
               </p>
               <div className="flex flex-col gap-2">
                 {app.displays.map((d) => (
@@ -132,7 +135,7 @@ export function SetupWizard() {
                 <Segmented
                   value={app.settings.appearance}
                   onChange={(v) => void app.saveSettings({ appearance: v })}
-                  options={[{ value: 'dark', label: 'Dark' }, { value: 'light', label: 'Light' }, { value: 'system', label: 'Match macOS' }]}
+                  options={[{ value: 'dark', label: 'Dark' }, { value: 'light', label: 'Light' }, { value: 'system', label: `Match ${OS.name}` }]}
                 />
               </div>
               <h2 className="mb-1 text-lg font-semibold">Choose a default theme for slides</h2>

@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react'
-import { MonitorPlay, Search, Music2 } from 'lucide-react'
-import { BRAND } from '@shared/brand'
+import { Menu, MonitorPlay, Search, Music2 } from 'lucide-react'
 import { api, onEvent } from '@/lib/api'
 import { cx } from '@/lib/format'
-import { isTyping, matchAction } from '@/lib/shortcuts'
+import { comboLabel, isTyping, matchAction } from '@/lib/shortcuts'
+import { IS_MAC } from '@/lib/platform'
 import { useApp, type View } from '@/stores/app'
 import { useLive, effectiveDisplayId } from '@/stores/live'
 import { useAudio } from '@/stores/audio'
@@ -26,6 +26,7 @@ import { HelpView } from '@/views/HelpView'
 import { SetupWizard } from '@/views/SetupWizard'
 import { RecoveryPrompt } from '@/components/RecoveryPrompt'
 import { NAV, NavBar } from '@/components/NavBar'
+import { Logo } from '@/components/Logo'
 
 function runShortcut(action: ReturnType<typeof matchAction>) {
   const live = useLive.getState()
@@ -151,17 +152,29 @@ export function App() {
     return () => offs.forEach((o) => o())
   }, [init])
 
-  // Appearance and accessibility: light/dark (or follow macOS), UI scale, high contrast.
+  // Appearance and accessibility: light/dark (or follow the OS), UI scale, high contrast.
   useEffect(() => {
     const root = document.documentElement
     root.style.zoom = String(settings.uiScale)
+    root.style.setProperty('--ui-zoom', String(settings.uiScale))
     root.dataset.contrast = settings.highContrast ? 'high' : 'normal'
     const media = window.matchMedia('(prefers-color-scheme: dark)')
+    // Windows draws its caption buttons over the header; keep them in its colours and height.
+    const syncTitleBar = () => {
+      if (IS_MAC) return
+      const css = getComputedStyle(root)
+      void api('app:titleBar', {
+        color: css.getPropertyValue('--color-panel').trim(),
+        symbolColor: css.getPropertyValue('--color-fg').trim(),
+        height: Math.round(44 * settings.uiScale)
+      }).catch(() => undefined)
+    }
     const apply = () => {
       const next = settings.appearance === 'system' ? (media.matches ? 'dark' : 'light') : settings.appearance
-      if (root.dataset.theme === next) return
+      if (root.dataset.theme === next) return syncTitleBar()
       root.classList.add('theme-switching')
       root.dataset.theme = next
+      syncTitleBar()
       requestAnimationFrame(() => requestAnimationFrame(() => root.classList.remove('theme-switching')))
     }
     apply()
@@ -218,15 +231,29 @@ export function App() {
 
   return (
     <div className="flex h-full flex-col">
-      <header className="drag flex h-11 shrink-0 items-center gap-3 border-b border-line bg-panel pr-3 pl-20">
-        <span className="text-[13px] font-semibold">{BRAND.name}</span>
+      <header className="drag titlebar flex h-11 shrink-0 items-center gap-3 border-b border-line bg-panel pr-3">
+        {!IS_MAC && (
+          <button
+            type="button"
+            aria-label="Menu"
+            data-tip="Menu"
+            onClick={(e) => {
+              const r = e.currentTarget.getBoundingClientRect()
+              void api('app:popupMenu', { x: Math.round(r.left), y: Math.round(r.bottom) })
+            }}
+            className="no-drag -mr-1 flex h-7 w-7 items-center justify-center rounded-md text-muted hover:bg-panel-3"
+          >
+            <Menu size={16} />
+          </button>
+        )}
+        <Logo size={20} />
         {church.name && <span className="truncate text-[12px] text-muted">· {church.name}</span>}
         <button
           type="button"
           onClick={() => setSearchOpen(true)}
           className="no-drag mx-auto flex h-7 w-80 items-center gap-2 rounded-md border border-line bg-panel-2 px-2.5 text-[12px] text-dim hover:border-line-strong"
         >
-          <Search size={13} /> Search songs, Bible, services, media… <span className="ml-auto font-mono">⌘K</span>
+          <Search size={13} /> Search songs, Bible, services, media… <span className="ml-auto font-mono">{comboLabel('Mod+KeyK')}</span>
         </button>
         {audioPlaying && (
           <button type="button" onClick={() => navigate('live')} className="no-drag flex max-w-52 items-center gap-1.5 rounded-md bg-audio/15 px-2 py-1 text-[12px] text-audio" data-tip="Audio playing — open Live view">

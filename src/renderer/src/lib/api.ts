@@ -3,11 +3,11 @@ import { BRAND } from '@shared/brand'
 
 /** Typed call into the main process. Rejects with a readable Error on failure. */
 export function api<C extends IpcChannel>(channel: C, ...arg: IpcArg<C> extends void ? [] : [IpcArg<C>]): Promise<IpcResult<C>> {
-  return window.wf.invoke(channel, arg[0] as IpcArg<C>)
+  return window.fc.invoke(channel, arg[0] as IpcArg<C>)
 }
 
 export function onEvent<E extends IpcEvent>(event: E, cb: (payload: IpcEvents[E]) => void): () => void {
-  return window.wf.on(event, cb)
+  return window.fc.on(event, cb)
 }
 
 export const mediaUrl = (id: string) => `${BRAND.mediaScheme}://media/${encodeURIComponent(id)}`

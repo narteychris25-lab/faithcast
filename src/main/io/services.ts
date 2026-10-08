@@ -7,18 +7,19 @@ import type { Repos } from '../db/repos'
 import { paths } from '../paths'
 import { fromPortable, toPortable } from './songs'
 import { BackgroundSchema, ItemInputSchema, parse, ThemeSettingsSchema, z } from '../validation'
+import { BRAND } from '@shared/brand'
 
 /**
  * .churchservice package (ZIP):
  *   manifest.json   — see ServiceManifest below
  *   media/<id>.<ext> — optional embedded media files
  */
-const FORMAT = 'worshipflow-service'
+const FORMAT = 'faithcast-service'
 const MAX_PACKAGE = 4 * 1024 * 1024 * 1024 // 4 GB
 const MAX_MANIFEST = 50 * 1024 * 1024
 
 const ManifestSchema = z.object({
-  format: z.literal(FORMAT),
+  format: z.enum([FORMAT, `${BRAND.legacy.slug}-service`]),
   version: z.literal(1),
   exportedAt: z.string(),
   service: z.object({

@@ -1,5 +1,7 @@
 # Keyboard shortcuts
 
+Keys are shown the macOS way. **On Windows**, use Ctrl for ⌘, Alt for ⌥ and Shift for ⇧; ⌫ (delete an item or element) is Delete, and Return is Enter. Help is **F1**, and redo in the slide editor is **Ctrl+Y** (Ctrl+Shift+Z also works). The app's own labels and tooltips always show the keys for the computer you're on.
+
 ## Live presentation
 
 These work in the Live view, and anywhere in the app while the output is open (except while typing in a text field). They also work when the output window has focus. You can change them in **Settings → Keyboard**.

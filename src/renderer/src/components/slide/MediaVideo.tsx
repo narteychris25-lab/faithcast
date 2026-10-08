@@ -20,7 +20,7 @@ interface Props {
 }
 
 /**
- * A playing video. Streams through wfmedia:// (range requests), so large
+ * A playing video. Streams through fcmedia:// (range requests), so large
  * files never load fully into memory. Releases its decoder on unmount.
  */
 export function MediaVideo({ mediaId, style, loop, muted, volume, paused, startPaused, onHandle, onError }: Props) {

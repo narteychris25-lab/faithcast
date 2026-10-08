@@ -7,7 +7,7 @@ import { Badge, Button, Input, Spinner } from '@/components/ui/controls'
 import { confirmDialog, toast } from '@/components/ui/overlays'
 import { VERSION_PREF } from '@/components/VersionPicker'
 
-/** Import Bible files (WorshipFlow, thiagobodruk/bible JSON/XML, Zefania, CSV); reports licence reminders. */
+/** Import Bible files (FaithCast, thiagobodruk/bible JSON/XML, Zefania, CSV); reports licence reminders. */
 export async function importBibleFiles(): Promise<number> {
   const r = await api('bible:import', null).catch((e) => {
     toast.error(e)
@@ -27,7 +27,7 @@ const plural = (n: number, word: string) => `${n} ${word}${n === 1 ? '' : 's'}`
 
 /**
  * Settings → Bibles: install the free English versions that ship with
- * WorshipFlow, import licensed files, choose the default, remove.
+ * FaithCast, import licensed files, choose the default, remove.
  */
 export function BibleVersions() {
   const translations = useApp((s) => s.translations)
@@ -171,7 +171,7 @@ export function BibleVersions() {
           </div>
         </div>
         <p className="mb-3 text-[12px] leading-relaxed text-muted">
-          Public-domain and openly licensed English Bibles that come with WorshipFlow. They install instantly and work offline.
+          Public-domain and openly licensed English Bibles that come with FaithCast. They install instantly and work offline.
         </p>
         {!library ? (
           <div className="flex justify-center p-8">
@@ -214,7 +214,7 @@ export function BibleVersions() {
       <section className="rounded-lg border border-line bg-panel p-4 text-[12px] leading-relaxed text-muted">
         <div className="mb-1 font-medium text-fg">Other versions (NIV, ESV, NKJV, NLT…)</div>
         These are copyrighted, so they aren't included. If your church has the publisher's permission, click <b>Import from file…</b> and choose the
-        file. Supported: WorshipFlow Bible, thiagobodruk/bible JSON or XML, Zefania XML and CSV. You can choose several files at once.
+        file. Supported: FaithCast Bible, thiagobodruk/bible JSON or XML, Zefania XML and CSV. You can choose several files at once.
       </section>
     </div>
   )

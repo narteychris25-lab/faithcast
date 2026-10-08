@@ -1,5 +1,6 @@
-import { app, BrowserWindow, dialog, ipcMain, shell, type IpcMainInvokeEvent } from 'electron'
+import { app, BrowserWindow, dialog, ipcMain, Menu, shell, type IpcMainInvokeEvent } from 'electron'
 import { existsSync, statSync, unlinkSync, writeFileSync } from 'node:fs'
+import { basename } from 'node:path'
 import type { IpcArg, IpcChannel, IpcResult, ImportResult, FileFilterKind } from '@shared/ipc'
 import type { BibleImportResult, LiveState, ThemeSettings } from '@shared/types'
 import { BRAND } from '@shared/brand'
@@ -38,8 +39,8 @@ const FILTERS: Record<FileFilterKind, Electron.FileFilter[]> = {
   song: [{ name: 'Songs', extensions: ['song', 'txt', 'json', 'xml'] }],
   service: [{ name: 'Service packages', extensions: [BRAND.fileExtensions.service] }],
   theme: [{ name: 'Themes', extensions: [BRAND.fileExtensions.theme] }],
-  bible: [{ name: 'Bibles (WorshipFlow, thiagobodruk JSON/XML, Zefania XML, CSV)', extensions: ['wfbible', 'json', 'xml', 'csv', 'gz'] }],
-  backup: [{ name: 'WorshipFlow backups', extensions: ['db'] }]
+  bible: [{ name: 'Bibles (FaithCast, thiagobodruk JSON/XML, Zefania XML, CSV)', extensions: ['fcbible', BRAND.legacy.bibleExtension, 'json', 'xml', 'csv', 'gz'] }],
+  backup: [{ name: 'FaithCast backups', extensions: ['db'] }]
 }
 
 export function registerIpc(ctx: AppContext): void {
@@ -118,6 +119,17 @@ export function registerIpc(ctx: AppContext): void {
     const file = parse(z.string().max(4096), p)
     if (existsSync(file)) shell.showItemInFolder(file)
   })
+  handle('app:titleBar', (a) => {
+    const color = z.string().regex(/^#[0-9a-f]{3,8}$/i)
+    const p = parse(z.object({ color, symbolColor: color, height: z.number().int().min(24).max(120) }), a)
+    const w = ctx.operator()
+    if (process.platform !== 'darwin' && w && !w.isDestroyed()) w.setTitleBarOverlay(p)
+  })
+  handle('app:popupMenu', (a) => {
+    const p = parse(z.object({ x: z.number().int().min(0).max(20000), y: z.number().int().min(0).max(20000) }), a)
+    const w = ctx.operator()
+    if (w && !w.isDestroyed()) Menu.getApplicationMenu()?.popup({ window: w, x: p.x, y: p.y })
+  })
   handle('app:relaunch', () => {
     app.relaunch()
     app.quit()
@@ -170,7 +182,7 @@ export function registerIpc(ctx: AppContext): void {
         res.ids.push(importThemeFile(repos, f).id)
         res.imported++
       } catch (err) {
-        res.errors.push(`${f.split('/').pop()}: ${(err as Error).message}`)
+        res.errors.push(`${basename(f)}: ${(err as Error).message}`)
       }
     }
     return res
@@ -204,7 +216,7 @@ export function registerIpc(ctx: AppContext): void {
           res.imported++
         }
       } catch (err) {
-        res.errors.push(`${f.split('/').pop()}: ${(err as Error).message}`)
+        res.errors.push(`${basename(f)}: ${(err as Error).message}`)
       }
     }
     return res
@@ -392,7 +404,7 @@ export function registerIpc(ctx: AppContext): void {
     const files = list ? validPaths(list) : await pickFiles(e, 'bible', true)
     const res: BibleImportResult = { imported: [], errors: [], warnings: [] }
     for (const f of files) {
-      const name = f.split('/').pop() ?? f
+      const name = basename(f)
       try {
         const { bible, entry } = readBibleFileDetailed(f)
         res.imported.push(repos.bible.importTranslation(bible))

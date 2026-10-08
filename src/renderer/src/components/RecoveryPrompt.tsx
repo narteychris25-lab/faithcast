@@ -43,7 +43,7 @@ export function RecoveryPrompt() {
       onClose={dismiss}
       title={
         <span className="flex items-center gap-2">
-          <LifeBuoy size={16} className="text-warn" /> WorshipFlow recovered from an unexpected shutdown
+          <LifeBuoy size={16} className="text-warn" /> FaithCast recovered from an unexpected shutdown
         </span>
       }
       footer={

@@ -28,7 +28,7 @@ test('full service workflow survives restart', async () => {
   let { app, page } = await launch()
 
   // 1–2. First-run wizard → church profile
-  await expect(page.getByText('Welcome to WorshipFlow')).toBeVisible()
+  await expect(page.getByText('Welcome to FaithCast')).toBeVisible()
   await page.getByPlaceholder('e.g. Glory House Chapel').fill('Grace Test Church')
   for (let i = 0; i < 4; i++) await page.getByTestId('wizard-next').click()
   await page.getByRole('button', { name: /Classic/ }).first().isVisible()
@@ -102,8 +102,8 @@ test('full service workflow survives restart', async () => {
   await out.screenshot({ path: `${shots}/04-output-bible.png` })
 
   // 19. Image
-  for (let i = 0; i < 20 && !(await out.locator('img[src*="wfmedia://media"]').count()); i++) await page.keyboard.press('Space'), await page.waitForTimeout(250)
-  await expect(out.locator('img[src*="wfmedia://media"]').first()).toBeVisible()
+  for (let i = 0; i < 20 && !(await out.locator('img[src*="fcmedia://media"]').count()); i++) await page.keyboard.press('Space'), await page.waitForTimeout(250)
+  await expect(out.locator('img[src*="fcmedia://media"]').first()).toBeVisible()
 
   // 20. Video plays
   await page.keyboard.press('Space')
