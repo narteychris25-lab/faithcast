@@ -1,0 +1,25 @@
+# Builds the macOS installers (Intel and Apple Silicon .dmg) on a GitHub Mac.
+# Start it from the Actions tab → "Build macOS installer" → Run workflow,
+# then download the .dmg files from the finished run's "Artifacts" section.
+name: Build macOS installer
+
+on:
+  workflow_dispatch:
+
+jobs:
+  mac:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci
+      - run: npm test
+      - run: npm run dist:mac
+      - uses: actions/upload-artifact@v4
+        with:
+          name: FaithCast-macOS
+          path: release/*.dmg
+          if-no-files-found: error
