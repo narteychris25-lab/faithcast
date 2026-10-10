@@ -29,7 +29,15 @@ export interface SlideContext {
 const SUPERSCRIPT = '⁰¹²³⁴⁵⁶⁷⁸⁹'
 export const superscript = (n: number) => String(n).replace(/\d/g, (d) => SUPERSCRIPT[Number(d)])
 
+/** The theme chosen with the top-bar Background button, if it is on and still exists. */
+export function backgroundTheme(ctx: Pick<SlideContext, 'settings' | 'themes'>): Theme | null {
+  const id = ctx.settings.presentation?.backgroundThemeId
+  return (id && ctx.themes.get(id)) || null
+}
+
 export function resolveTheme(item: ServiceItem | null, ctx: SlideContext): ThemeSettings {
+  const forced = backgroundTheme(ctx)
+  if (forced) return forced.settings
   const ids = [item?.themeId, item?.type === 'song' ? ctx.song?.themeId : null, ctx.service?.themeId, ctx.settings.defaultThemeId]
   for (const id of ids) {
     if (id && ctx.themes.has(id)) return ctx.themes.get(id)!.settings
@@ -38,6 +46,7 @@ export function resolveTheme(item: ServiceItem | null, ctx: SlideContext): Theme
 }
 
 export function resolveBackground(item: ServiceItem | null, theme: ThemeSettings, ctx: SlideContext): Background {
+  if (backgroundTheme(ctx)) return theme.background
   return item?.background ?? ctx.service?.background ?? theme.background ?? DEFAULT_BACKGROUND
 }
 

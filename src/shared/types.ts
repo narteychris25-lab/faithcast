@@ -387,6 +387,8 @@ export interface AppSettings {
     previewWindowScale: number
     defaultTransition: Transition
     showLogoOnBlack: boolean
+    /** Theme picked with the top-bar Background button; overrides every other theme and background. null = off. */
+    backgroundThemeId: string | null
   }
   audio: { outputDeviceId: string; defaultVolume: number }
   bible: { defaultTranslationId: string | null; versesPerSlide: number; showReference: boolean }

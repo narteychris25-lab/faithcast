@@ -110,3 +110,29 @@ describe('buildSlides', () => {
     )
   })
 })
+
+describe('projection background (top-bar Background button)', () => {
+  const withBg = (id: string | null) => ({ ...DEFAULT_SETTINGS, presentation: { ...DEFAULT_SETTINGS.presentation, backgroundThemeId: id } })
+  const custom = { ...DEFAULT_BACKGROUND, kind: 'color' as const, color: '#ff0000' }
+
+  it('overrides item, service and theme backgrounds while on', () => {
+    const it_ = item({ type: 'sermon', themeId: 'theme-youth', background: custom, data: { body: 'Hello' } })
+    const [s] = buildSlides(it_, ctx({ settings: withBg('theme-dark'), service: { themeId: 'theme-classic', background: custom } }))
+    const dark = themes.get('theme-dark')!.settings
+    expect(s.theme).toBe(dark)
+    expect(s.background).toEqual(dark.background)
+  })
+
+  it('is ignored when off or when the theme no longer exists', () => {
+    const it_ = item({ type: 'sermon', themeId: 'theme-youth', data: { body: 'Hello' } })
+    const youth = themes.get('theme-youth')!.settings
+    expect(buildSlides(it_, ctx({ settings: withBg(null) }))[0].theme).toBe(youth)
+    expect(buildSlides(it_, ctx({ settings: withBg('deleted') }))[0].theme).toBe(youth)
+  })
+
+  it('leaves image and video items alone', () => {
+    const [s] = buildSlides(item({ type: 'image', data: { mediaId: 'm1' } }), ctx({ settings: withBg('theme-dark') }))
+    expect(s.kind).toBe('media')
+    expect(s.background.color).toBe('#000000')
+  })
+})

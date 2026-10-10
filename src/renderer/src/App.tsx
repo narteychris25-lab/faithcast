@@ -27,6 +27,7 @@ import { SetupWizard } from '@/views/SetupWizard'
 import { RecoveryPrompt } from '@/components/RecoveryPrompt'
 import { NAV, NavBar } from '@/components/NavBar'
 import { Logo } from '@/components/Logo'
+import { BackgroundSwitcher } from '@/components/BackgroundSwitcher'
 
 function runShortcut(action: ReturnType<typeof matchAction>) {
   const live = useLive.getState()
@@ -248,6 +249,7 @@ export function App() {
         )}
         <Logo size={20} />
         {church.name && <span className="truncate text-[12px] text-muted">· {church.name}</span>}
+        <BackgroundSwitcher />
         <button
           type="button"
           onClick={() => setSearchOpen(true)}

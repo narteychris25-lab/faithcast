@@ -244,7 +244,8 @@ export const DEFAULT_SETTINGS: AppSettings = {
     fullscreenMode: 'borderless',
     previewWindowScale: 0.5,
     defaultTransition: { type: 'fade', duration: 400 },
-    showLogoOnBlack: false
+    showLogoOnBlack: false,
+    backgroundThemeId: null
   },
   audio: { outputDeviceId: 'default', defaultVolume: 0.8 },
   bible: { defaultTranslationId: null, versesPerSlide: 1, showReference: true },
