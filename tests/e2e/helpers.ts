@@ -17,9 +17,19 @@ export async function launch(dataDir: string): Promise<{ app: ElectronApplicatio
   // FAITHCAST_E2E_EXE lets the same tests drive the packaged app (.app binary on macOS, .exe on Windows)
   const exe = process.env.FAITHCAST_E2E_EXE
   const app = exe ? await electron.launch({ executablePath: exe, args: [], env }) : await electron.launch({ args: ['.'], env })
-  const page = await app.firstWindow()
+  // The launch splash opens first; the operator window is the one loading index.html
+  const page = await operatorWindow(app)
   await page.waitForLoadState('domcontentloaded')
   return { app, page }
+}
+
+async function operatorWindow(app: ElectronApplication): Promise<Page> {
+  for (let i = 0; i < 150; i++) {
+    const w = app.windows().find((p) => p.url().includes('index.html'))
+    if (w) return w
+    await new Promise((r) => setTimeout(r, 100))
+  }
+  throw new Error('operator window did not open')
 }
 
 /** Complete the first-run wizard with demo content. */

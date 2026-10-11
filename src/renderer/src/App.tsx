@@ -9,7 +9,7 @@ import { useLive, effectiveDisplayId } from '@/stores/live'
 import { useAudio } from '@/stores/audio'
 import { useContent } from '@/stores/content'
 import { useService } from '@/stores/service'
-import { Spinner } from '@/components/ui/controls'
+import { LoadingSplash } from '@/components/LoadingSplash'
 import { ContextMenuHost, DialogHost, ToastHost, TooltipHost, confirmDialog, toast } from '@/components/ui/overlays'
 import { ErrorBoundary } from '@/components/ErrorBoundary'
 import { SearchPalette } from '@/components/SearchPalette'
@@ -211,13 +211,12 @@ export function App() {
     return () => window.removeEventListener('beforeunload', flush)
   }, [])
 
-  if (!ready) {
-    return (
-      <div className="flex h-full items-center justify-center">
-        <Spinner size={24} />
-      </div>
-    )
-  }
+  // Tell the main process the first screen is ready, so it can swap the launch splash for this window.
+  useEffect(() => {
+    if (ready) void api('app:ready').catch(() => {})
+  }, [ready])
+
+  if (!ready) return <LoadingSplash />
   if (!settings.setupComplete) {
     return (
       <>

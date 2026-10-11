@@ -1,7 +1,7 @@
 {
   "name": "faithcast",
   "productName": "FaithCast",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "FaithCast — offline-first worship presentation software for churches",
   "main": "out/main/index.js",
   "author": "FaithCast",

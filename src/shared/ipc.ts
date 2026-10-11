@@ -102,6 +102,7 @@ export interface IpcContract {
   'app:setUnsaved': [boolean, void]
   'app:loadDemo': [void, { serviceId: string | null }]
   'app:removeDemo': [void, { removed: number }]
+  'app:ready': [void, void]
   /** Windows: colour and height of the caption-button overlay. */
   'app:titleBar': [{ color: string; symbolColor: string; height: number }, void]
   /** Windows: show the app menu (there is no menu bar) at a point in the window. */
@@ -245,6 +246,7 @@ const CHANNELS: Record<IpcChannel, true> = {
   'app:setUnsaved': true,
   'app:loadDemo': true,
   'app:removeDemo': true,
+  'app:ready': true,
   'app:titleBar': true,
   'app:popupMenu': true,
   'dashboard:get': true,

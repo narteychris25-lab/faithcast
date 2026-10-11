@@ -137,6 +137,7 @@ export function registerIpc(ctx: AppContext): void {
   handle('app:setUnsaved', (v) => ctx.setUnsaved(!!v))
   handle('app:loadDemo', () => ctx.loadDemo())
   handle('app:removeDemo', () => ctx.removeDemo())
+  handle('app:ready', () => ctx.rendererReady())
 
   handle('dashboard:get', () => repos.dashboard())
   handle('search:global', (q) => repos.search(parse(z.string().max(200), q)))

@@ -15,6 +15,7 @@ import { makeThumbnail } from './media/importer'
 import { OutputManager } from './windows/output'
 import { listDisplays } from './windows/displays'
 import { hardenWindow, loadEntry, PRELOAD } from './windows/load'
+import { showSplash, type Splash } from './windows/splash'
 import { registerIpc } from './ipc/handlers'
 import { setupWebSandbox } from './web'
 import { buildMenu } from './menu'
@@ -48,6 +49,10 @@ let quitting = false
 let crashedLastRun = false
 let lastLiveSave = 0
 let pendingSnapshot: LiveState | null = null
+let splash: Splash | null = null
+/** Resolved by the operator renderer (app:ready) once its first screen has loaded. */
+let markRendererReady: () => void = () => {}
+const rendererReady = new Promise<void>((resolve) => (markRendererReady = resolve))
 let snapshotTimer: ReturnType<typeof setTimeout> | null = null
 
 /** Persist where the presentation is (at most once a second, always including the latest state) so a crash can resume. */
@@ -83,7 +88,8 @@ function sendToOperator<E extends IpcEvent>(event: E, payload: IpcEvents[E]): vo
 
 // ------------------------------------------------------------------ database
 
-function initDatabase(): void {
+async function initDatabase(status: (text: string) => Promise<void>): Promise<void> {
+  await status('Opening your library…')
   const file = paths.database()
   const opened = openDatabase(file, (conn, from) => {
     log.info(`migrating database from v${from}; taking safety backup`)
@@ -93,6 +99,7 @@ function initDatabase(): void {
   repos = createRepos(db)
   if (opened.applied.length) log.info('migrations applied', opened.applied)
   repos.themes.ensureBuiltins()
+  await status('Preparing Bibles…')
   seedBibles(repos)
   relinkDemoMedia(repos)
 
@@ -105,6 +112,7 @@ function initDatabase(): void {
   const last = s.backup.lastBackupAt ? Date.parse(s.backup.lastBackupAt) : 0
   if (s.backup.autoBackup && Date.now() - last > 20 * 3600 * 1000 && repos.services.count() + repos.songs.count() > 0) {
     try {
+      await status('Backing up your library…')
       const b = createBackupSync(db, 'auto')
       repos.settings.save({ backup: { lastBackupAt: b.createdAt } })
       pruneBackups(s.backup.keep)
@@ -171,9 +179,19 @@ function createOperatorWindow(): void {
     webPreferences: { preload: PRELOAD, sandbox: true, contextIsolation: true, nodeIntegration: false, spellcheck: true, webviewTag: true }
   })
   hardenWindow(operatorWin)
+  // Stay hidden behind the splash until the first screen has loaded (with a fallback so a
+  // renderer problem never leaves the app invisible), then swap the splash for this window.
   operatorWin.once('ready-to-show', () => {
-    operatorWin?.show()
-    if (wa.width < 1500) operatorWin?.maximize()
+    void Promise.race([rendererReady, new Promise((r) => setTimeout(r, 10_000))]).then(async () => {
+      const reveal = () => {
+        if (!operatorWin || operatorWin.isDestroyed()) return
+        operatorWin.show()
+        if (wa.width < 1500) operatorWin.maximize()
+      }
+      if (splash) await splash.close(reveal)
+      else reveal()
+      splash = null
+    })
   })
 
   operatorWin.on('close', (e) => {
@@ -212,11 +230,13 @@ app.on('second-instance', () => {
   }
 })
 
-app.whenReady().then(() => {
+app.whenReady().then(async () => {
+  splash = await showSplash()
   try {
-    initDatabase()
+    await initDatabase((text) => splash?.status(text) ?? Promise.resolve())
   } catch (e) {
     log.error('database init failed', e)
+    splash?.destroy()
     dialog.showErrorBox(
       `${BRAND.name} could not open its database`,
       `${e instanceof Error ? e.message : String(e)}\n\nYour backups are in:\n${paths.backups()}`
@@ -274,7 +294,8 @@ app.whenReady().then(() => {
       broadcast('media:changed', undefined)
       return { serviceId }
     },
-    removeDemo: () => ({ removed: removeDemo(repos) })
+    removeDemo: () => ({ removed: removeDemo(repos) }),
+    rendererReady: () => markRendererReady()
   }
   registerIpc(ctx)
   buildMenu((command) => sendToOperator('app:menu', command), isDev)
@@ -294,6 +315,7 @@ app.whenReady().then(() => {
     broadcast('displays:changed', listDisplays())
   })
 
+  await splash?.status('Getting everything ready…')
   createOperatorWindow()
   log.info(`${BRAND.name} ${app.getVersion()} started`, { crashedLastRun, data: paths.root() })
 })

@@ -19,4 +19,6 @@ export interface AppContext {
   restoreDatabase: (file: string) => void
   loadDemo: () => Promise<{ serviceId: string | null }>
   removeDemo: () => { removed: number }
+  /** The operator window's first screen has loaded (hides the launch splash). */
+  rendererReady: () => void
 }

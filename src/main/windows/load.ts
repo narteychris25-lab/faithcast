@@ -3,11 +3,11 @@ import { join } from 'node:path'
 
 export const PRELOAD = join(__dirname, '../preload/index.js')
 
-/** Load a renderer entry (index.html / output.html) in dev or production. */
-export function loadEntry(win: BrowserWindow, entry: 'index' | 'output'): Promise<void> {
+/** Load a renderer entry (index.html / output.html / splash.html) in dev or production. */
+export function loadEntry(win: BrowserWindow, entry: 'index' | 'output' | 'splash', query?: Record<string, string>): Promise<void> {
   const devUrl = process.env['ELECTRON_RENDERER_URL']
-  if (devUrl) return win.loadURL(`${devUrl}/${entry}.html`)
-  return win.loadFile(join(__dirname, `../renderer/${entry}.html`))
+  if (devUrl) return win.loadURL(`${devUrl}/${entry}.html${query ? `?${new URLSearchParams(query)}` : ''}`)
+  return win.loadFile(join(__dirname, `../renderer/${entry}.html`), query ? { query } : undefined)
 }
 
 /** Lock down navigation: no in-app navigation away, external links open in the browser. */

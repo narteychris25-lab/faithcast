@@ -208,6 +208,19 @@ select,
   animation: fc-fade-in 150ms ease-out;
 }
 
+/* indeterminate progress bar on the loading screen */
+@keyframes fc-splash-slide {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: translateX(300%);
+  }
+}
+.fc-splash-bar {
+  animation: fc-splash-slide 1.4s ease-in-out infinite;
+}
+
 @keyframes fc-pulse-live {
   0%,
   100% {

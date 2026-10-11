@@ -1,0 +1,149 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="Content-Security-Policy" content="__CSP__" />
+    <title>FaithCast</title>
+    <style>
+      /* The launch splash: shown by the main process while the library opens (see main/windows/splash.ts). */
+      html,
+      body {
+        margin: 0;
+        height: 100%;
+        background: transparent;
+        overflow: hidden;
+        user-select: none;
+        -webkit-user-select: none;
+        cursor: default;
+        font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Segoe UI', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+        -webkit-font-smoothing: antialiased;
+      }
+      .card {
+        position: absolute;
+        inset: 0;
+        border-radius: 18px;
+        overflow: hidden;
+        color: #fff;
+        background:
+          radial-gradient(120% 90% at 50% -10%, rgba(42, 116, 245, 0.55), transparent 60%),
+          radial-gradient(80% 60% at 50% 120%, rgba(11, 108, 245, 0.25), transparent 70%),
+          #0b1533;
+        box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.08);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        -webkit-app-region: drag;
+      }
+      /* a soft beam of light from above */
+      .beam {
+        position: absolute;
+        top: -40%;
+        left: 50%;
+        width: 140%;
+        height: 120%;
+        transform: translateX(-50%);
+        background: conic-gradient(from 180deg at 50% 0%, transparent 160deg, rgba(127, 178, 255, 0.18) 174deg, rgba(255, 255, 255, 0.28) 180deg, rgba(127, 178, 255, 0.18) 186deg, transparent 200deg);
+        filter: blur(18px);
+        animation: breathe 3.2s ease-in-out infinite;
+      }
+      .mark {
+        position: relative;
+        width: 84px;
+        height: 84px;
+        border-radius: 22px;
+        background: #fff;
+        display: grid;
+        place-items: center;
+        box-shadow: 0 18px 50px -12px rgba(42, 116, 245, 0.75);
+        animation: rise 0.9s cubic-bezier(0.22, 1, 0.36, 1) both;
+      }
+      .mark img {
+        width: 52px;
+        height: auto;
+      }
+      .word {
+        position: relative;
+        margin-top: 20px;
+        font-size: 30px;
+        font-weight: 700;
+        letter-spacing: -0.02em;
+        animation: rise 0.9s 0.12s cubic-bezier(0.22, 1, 0.36, 1) both;
+      }
+      .word span {
+        color: #5b95ff;
+      }
+      .tag {
+        position: relative;
+        margin-top: 6px;
+        font-size: 13px;
+        color: rgba(255, 255, 255, 0.6);
+        animation: rise 0.9s 0.2s cubic-bezier(0.22, 1, 0.36, 1) both;
+      }
+      .foot {
+        position: absolute;
+        left: 28px;
+        right: 28px;
+        bottom: 24px;
+        animation: fade 0.8s 0.35s both;
+      }
+      .bar {
+        position: relative;
+        height: 3px;
+        border-radius: 3px;
+        background: rgba(255, 255, 255, 0.1);
+        overflow: hidden;
+      }
+      .bar::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        width: 35%;
+        border-radius: 3px;
+        background: linear-gradient(90deg, transparent, #5b95ff, #fff, #5b95ff, transparent);
+        animation: slide 1.4s ease-in-out infinite;
+      }
+      .row {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 10px;
+        font-size: 12px;
+        color: rgba(255, 255, 255, 0.55);
+      }
+      #status {
+        transition: opacity 0.2s;
+      }
+      @keyframes rise {
+        from { opacity: 0; transform: translateY(10px) scale(0.96); }
+        to { opacity: 1; transform: none; }
+      }
+      @keyframes fade {
+        from { opacity: 0; }
+      }
+      @keyframes slide {
+        from { transform: translateX(-100%); }
+        to { transform: translateX(290%); }
+      }
+      @keyframes breathe {
+        0%, 100% { opacity: 0.75; }
+        50% { opacity: 1; }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        *, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="card" role="status" aria-live="polite">
+      <div class="beam"></div>
+      <div class="mark"><img src="./src/assets/logo-mark.png" alt="" /></div>
+      <div class="word">Faith<span>Cast</span></div>
+      <div class="tag">Worship presentation</div>
+      <div class="foot">
+        <div class="bar"></div>
+        <div class="row"><span id="status">Starting…</span><span id="version"></span></div>
+      </div>
+    </div>
+    <script type="module" src="./splash/main.ts"></script>
+  </body>
+</html>
